@@ -1,12 +1,17 @@
 import { useParams, Link } from 'react-router-dom';
-import { projects } from '../data/projectData';
 import Chip from '../components/Chip';
+
+// Load MDX modules eagerly for now to match Projects.tsx behavior
+const mdxModules = import.meta.glob('../content/projects/*.mdx', { eager: true });
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const project = projects.find((p) => p.id === id);
+  
+  // Find the exact module for the requested ID
+  const projectPath = Object.keys(mdxModules).find(path => path.endsWith(`/${id}.mdx`));
+  const module = projectPath ? mdxModules[projectPath] as any : null;
 
-  if (!project) {
+  if (!module) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-20 text-center">
         <h1 className="text-4xl font-display font-bold text-gray-900 mb-4">Project not found</h1>
@@ -16,6 +21,9 @@ export default function ProjectDetail() {
       </div>
     );
   }
+
+  const MDXContent = module.default;
+  const meta = module.meta;
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
@@ -28,43 +36,61 @@ export default function ProjectDetail() {
         <div className="flex items-center gap-4 mb-6">
           <div className="p-4 bg-gray-50 rounded-3xl text-gray-700">
             <span className="material-symbols-rounded text-4xl">
-              {project.id === 'rbai' ? 'smart_toy' : 'dashboard'}
+              {id === 'rbai' ? 'smart_toy' : 'dashboard'}
             </span>
           </div>
           <div>
             <h1 className="text-4xl font-display font-bold text-gray-900 leading-tight">
-              {project.title}
+              {meta.title}
             </h1>
-            <span className="text-gray-500 font-medium">{project.date}</span>
+            <span className="text-gray-500 font-medium">{meta.date}</span>
           </div>
         </div>
 
         <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-          {project.shortDescription}
+          {meta.shortDescription}
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-12 border-b border-gray-100 pb-8">
-          {project.techStack.map((tech) => (
+        <div className="flex flex-wrap gap-2 mb-8">
+          {meta.techStack?.map((tech: string) => (
             <Chip key={tech} className="bg-white border-gray-200 text-gray-700">
               {tech}
             </Chip>
           ))}
         </div>
+
+        {meta.links && (
+          <div className="flex flex-wrap gap-4 border-b border-gray-100 pb-8">
+            {meta.links.livePreview && (
+              <a href={meta.links.livePreview} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-google-blue text-white px-4 py-2 rounded-full font-medium hover:bg-blue-600 transition-colors text-sm">
+                <span className="material-symbols-rounded text-[18px]">open_in_new</span>
+                Live Preview
+              </a>
+            )}
+            {meta.links.github && (
+              <a href={meta.links.github} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors text-sm">
+                <span className="material-symbols-rounded text-[18px]">code</span>
+                GitHub
+              </a>
+            )}
+            {meta.links.videoDemo && (
+              <a href={meta.links.videoDemo} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-google-red text-white px-4 py-2 rounded-full font-medium hover:bg-red-600 transition-colors text-sm">
+                <span className="material-symbols-rounded text-[18px]">play_circle</span>
+                Video Demo
+              </a>
+            )}
+            {meta.links.article && (
+              <a href={meta.links.article} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-google-green text-white px-4 py-2 rounded-full font-medium hover:bg-green-600 transition-colors text-sm">
+                <span className="material-symbols-rounded text-[18px]">article</span>
+                Featured Post
+              </a>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className="prose prose-lg max-w-none text-gray-700">
-        <h2 className="text-2xl font-display font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <span className="material-symbols-rounded text-google-yellow">lightbulb</span>
-          About the Project
-        </h2>
-        <ul className="space-y-4 list-none pl-0">
-          {project.bulletPoints.map((point, idx) => (
-            <li key={idx} className="flex gap-4">
-              <span className="material-symbols-rounded text-google-blue shrink-0 mt-1">check_circle</span>
-              <span className="leading-relaxed">{point}</span>
-            </li>
-          ))}
-        </ul>
+      <div className="prose prose-lg prose-blue max-w-none text-gray-700 prose-headings:font-display prose-headings:font-bold prose-a:text-google-blue">
+        <MDXContent />
       </div>
     </div>
   );

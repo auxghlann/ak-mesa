@@ -1,0 +1,33 @@
+export const meta = {
+  title: "Table Reviewer",
+  date: "2026",
+  shortDescription: "A comprehensive, dynamic reviewer app for computer science and IT subjects featuring study materials and interactive flashcards.",
+  techStack: ["ReactJS", "Vite", "Tailwind CSS", "Supabase", "MDX"],
+  links: {
+    livePreview: null,
+    github: "https://github.com/auxghlann/table_reviewer",
+    videoDemo: null
+  }
+};
+
+## The Problem Statement
+In my university days, I teach a lot, especially during exams or review for a quiz. And my teaching
+kind of became a business somehow. And with that, I experienced a shortcoming to 
+my current design in my business. Before, I'm using a google docs, but the problem with it is that,
+to protect my reviewer contents, I need to edit its sharing settings to restrict access to only those
+who bought them. But it's kinda hassle to do it all the time (and there is a possibility of leakage of reviewer!). Not only that, the storage of file is kinda
+hard to scale. And with those problem, I told myself, *what if I create a system to solve this problem?* And that I did.
+I want to make a system wherein my clients can login to my app and in there, they can access now their reviewer.
+By creating this app, it solves now the access problem and the scalability of my reviewers. 
+
+## Architecture & Tech Stack
+I designed the system to be fast, modular, and easy to update with new content.
+*   **ReactJS & Vite:** Chosen for the core framework to ensure rapid development, fast hot module replacement (HMR), and a snappy user experience.
+*   **Supabase:** Integrated for robust user authentication and backend database management, securing the study materials behind protected routes.
+*   **Tailwind CSS:** Used to create a visually appealing, premium UI with consistent grid backgrounds, distinctive borders, and responsive design elements that feel modern and engaging.
+*   **MDX:** Perfect for writing rich-text study notes. It allows me to blend standard markdown formatting with JSX components, making the study materials dynamic and highly readable.
+*   **JSON Content Files:** Flashcard data is structured in JSON files. This separation of content from the component logic keeps the codebase clean and allows for effortless additions of new study sets without touching the UI code.
+
+
+I only created this at my senior year so it is kind of shortlived but I learned a lot in this project, and it is my first 
+time to have active users on my projects.
