@@ -1,6 +1,6 @@
 declare module '*.mdx' {
   import type { ComponentProps, JSX } from 'react'
-  
+
   export const meta: {
     title: string;
     date: string;
@@ -12,6 +12,7 @@ declare module '*.mdx' {
       videoDemo?: string | null;
       article?: string | null;
     };
+    images?: string[];
   }
 
   export default function MDXContent(props: ComponentProps<'div'>): JSX.Element
