@@ -4,6 +4,9 @@ import Chip from '../components/Chip';
 // Load MDX modules eagerly for now to match Projects.tsx behavior
 const mdxModules = import.meta.glob('../content/projects/*.mdx', { eager: true });
 
+// Load all project images to map them dynamically
+const imageAssets = import.meta.glob<{ default: string }>('../assets/projects/**/*.{png,jpg,jpeg,svg,webp}', { eager: true });
+
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   
@@ -24,6 +27,11 @@ export default function ProjectDetail() {
 
   const MDXContent = module.default;
   const meta = module.meta;
+
+  const getImageUrl = (imagePath: string) => {
+    const fullPath = `../assets/projects/${imagePath}`;
+    return imageAssets[fullPath]?.default || '';
+  };
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
@@ -88,6 +96,25 @@ export default function ProjectDetail() {
           </div>
         )}
       </div>
+
+      {meta.images && meta.images.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          {meta.images.map((imgPath: string, idx: number) => {
+            const url = getImageUrl(imgPath);
+            if (!url) return null;
+            // Make the last image span 2 columns if there is an odd number of images
+            const isLastOdd = idx === meta.images.length - 1 && meta.images.length % 2 !== 0;
+            return (
+              <img 
+                key={imgPath} 
+                src={url} 
+                alt={`${meta.title} screenshot ${idx + 1}`} 
+                className={`w-full h-auto rounded-2xl shadow-sm border border-gray-200 ${isLastOdd ? 'md:col-span-2' : ''}`}
+              />
+            );
+          })}
+        </div>
+      )}
 
       <div className="prose prose-lg prose-blue max-w-none text-gray-700 prose-headings:font-display prose-headings:font-bold prose-a:text-google-blue">
         <MDXContent />
