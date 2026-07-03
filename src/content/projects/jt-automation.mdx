@@ -1,0 +1,61 @@
+export const meta = {
+  title: "Job Tracking Automation Script",
+  date: "2026",
+  icon: "smart_toy",
+  shortDescription: "An AI-powered workflow that automatically parses job application emails and updates a Google Sheets tracker.",
+  techStack: ["Python", "LangGraph", "LangChain", "Groq", "MCP", "Google Workspace APIs", "BeautifulSoup4"],
+  links: {
+    livePreview: null,
+    github: "https://github.com/auxghlann/jt_automation",
+    videoDemo: null
+  }
+};
+
+import graphImg from '../../assets/projects/jt_automation/graph.png';
+import ss2Img from '../../assets/projects/jt_automation/ss2.png';
+
+This was the first time I tried to code again without AI (partially), so basically, I ideate everything, the system design and architecture, and even wrote the the langgraph workflow *(even though it took me 4 hours to do everything, but I learned a lot! I kind of want to feel the productive struggle again.)*. But for the rest like the MCP, the googleapi & Oauth integration I need a little help for that so I ask AI for some assistance XD.
+
+## The Problem Statement
+This is a side project I just thought of while applying for jobs. I experienced the tedious repetition of constantly checking my email to see if there were any updates to my applications.
+Instead of going through that every day, I decided to build an automated agent *(since AI Automation is one of the roles I apply for, it felt like the perfect way to prove I could do it!)*.
+
+## Architecture & Tech Stack
+To ensure the system was scalable, robust, and cost-effective, I chose a modern AI orchestration stack:
+- **LangGraph & LangChain**: Used to build a reliable, state-machine-based workflow for the agent. LangGraph's nodes and edges provide deterministic control over the LLM's execution path.
+- **Model Context Protocol (MCP)**: Implemented an MCP server for Gmail integration. This decouples the integration logic from the core agent, standardizing how the LLM accesses recent emails.
+- **Google Workspace APIs**: Utilized for secure OAuth authentication and interacting directly with Gmail and Google Sheets.
+- **Groq**: Chosen as the LLM provider for its ultra-low latency inference *(and also because it is free and I'm broke atm)*, crucial for processing large batches of text quickly.
+
+## The Design
+The core automation relies on a meticulously designed state graph with four primary nodes: `get_email`, `tools`, `analyzer`, and `update_sheets`. 
+
+<div className="max-w-md mx-auto my-8 not-prose">
+  <img src={graphImg} alt="LangGraph Architecture" className="w-full h-auto rounded-2xl shadow-sm border border-gray-200" />
+</div>
+
+## Engineering Challenges & Optimizations
+
+Building this wasn't as simple as just plugging an LLM into an email inbox. I ran into several major engineering hurdles, mostly revolving around rate limits and dirty data.
+
+**1. Beating the Free Tier Limits (Dual-Model Architecture)**
+Initially, feeding massive email threads to the LLM immediately hit Groq's free-tier rate limit of 12,000 Tokens Per Minute (TPM). To optimize both speed and token costs, I redesigned the workflow into a **Dual-Model Architecture**:
+- A **Fast Model** (`llama-4-scout-17b`) handles the initial routing. It binds to the MCP tools, fetches the emails, and determines if there are any actionable updates.
+- A **Smart Model** (`llama-3.3-70b-versatile`) is invoked only for the heavy lifting. Using structured outputs (`with_structured_output`), it accurately extracts a rigid Pydantic schema (`company_name`, `job_title`, `status`, etc.).
+Furthermore, the workflow dynamically filters its own memory using LangChain's `RemoveMessage` utility to prune intermediate tool-call messages and retain only essential context.
+
+**2. The Hidden War on Tokens (Email Parsing)**
+Extracting the actual job title from an email proved to be the hardest challenge. 
+- **Broken Plaintext Fallbacks**: Relying on Gmail's native `snippet` or the email's `text/plain` fallback failed miserably because companies like LinkedIn often leave the plaintext version empty or heavily truncated. 
+- **Invisible Watermarks**: Email marketers inject hundreds of invisible zero-width characters (like `\u200c`, `\u200d`, `\xad`) and tracking links into emails. These are invisible to humans but silently consume thousands of LLM tokens.
+- **The Fix**: I pivoted to extracting the raw `text/html` payload, parsing it with `BeautifulSoup4` to cleanly strip all HTML tags and separate blocks with newlines. I then implemented a series of Regex rules to instantly vaporize massive tracking URLs, hunt down and destroy invisible unicode characters, and aggressively truncate massive "Similar Jobs" recommendations at the footer of the emails. This maxed out token efficiency and provided the LLM with perfectly clean, dense text.
+
+**3. Smart Google Sheets Upserting**
+Rather than blindly appending rows and creating duplicates every time the script ran, I built an intelligent deduplication logic. The final node reads the existing Google Sheet, matches entries based on `Company Name` and `Job Title`, and selectively executes `update` operations to overwrite the status (e.g., from "Applied" to "Application Viewed") while appending brand new jobs to the bottom.
+
+<div className="my-8 not-prose">
+  <img src={ss2Img} alt="Automation Result Tracker" className="w-full h-auto rounded-2xl shadow-sm border border-gray-200" />
+</div>
+
+## Final Thoughts
+Building this automation highlighted the power of combining modern AI orchestration tools with standard APIs. By leveraging a dual-model approach, strict state management via LangGraph, and aggressive data-cleaning heuristics, I was able to transform a brittle manual task into a highly reliable and cost-efficient autonomous system. It stands as a strong example of my skills in AI engineering and AI automation. Lastly, this proejct taught me that AI is not only for conversational chatbots, but can be a practical, background utility that solves real-world workflow problems.
