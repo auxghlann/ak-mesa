@@ -24,7 +24,7 @@ export default function Projects() {
           Projects <span className="text-google-red">.</span>
         </h1>
         <p className="text-lg text-on-surface-variant">
-          A collection of things I've built, focusing on AI and active learning.
+          A collection of things I've built.
         </p>
       </div>
 
@@ -40,10 +40,10 @@ export default function Projects() {
                 </div>
                 <span className="text-sm text-gray-400 font-medium">{project.date}</span>
               </div>
-              
+
               <h2 className="text-2xl font-display font-bold mb-2">{project.title}</h2>
               <p className="text-gray-600 mb-6 flex-grow">{project.shortDescription}</p>
-              
+
               <div className="flex flex-wrap gap-2 mt-auto">
                 {project.techStack?.map((tech: string) => (
                   <Chip key={tech} className="text-xs bg-gray-50 border-gray-100 text-gray-600">
