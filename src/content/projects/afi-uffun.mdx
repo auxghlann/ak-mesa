@@ -1,0 +1,45 @@
+export const meta = {
+  title: "UFFUN - Centralized Emergency Routing Hub",
+  date: "2026",
+  shortDescription: "An AI-powered emergency response platform that centralizes and routes local hotlines using natural language understanding.",
+  techStack: ["React", "TypeScript", "FastAPI", "LangGraph", "LangChain", "SQLAlchemy", "TailwindCSS"],
+  links: {
+    livePreview: null,
+    github: "https://github.com/auxghlann/afi-uffun",
+    videoDemo: "https://drive.google.com/file/d/1IE4A1qK7lGwwRGUlU4Dc14VeIJzulwMh/view?ths=true"
+  }
+};
+
+*This project is our output in the DevKada Online Hackathon Event (May 8, 2026). The output was near-finished as it conflicted with our final defense for our thesis, but good enough for a MVP.*  
+
+## The Problem Statement
+In many areas of the Philippines, especially outside major metropolitan hubs, emergency response is often delayed due to fragmented local hotlines. Callers are burdened with memorizing the correct number for their exact location and specific emergency type. Even with a national `911` hotline, coverage is uneven, and calls frequently undergo manual redirection, leading to incomplete or unclear details reaching the actual dispatch centers. In time-critical situations, these delays and miscommunications cost precious seconds. UFFUN was built to solve this by providing a single, intelligent access point that understands natural language reports and routes them automatically.
+
+## Architecture & Tech Stack
+The platform is designed as a full-stack, deployment-ready application with a clear separation between the caller interface and the AI-driven backend.
+
+*   **Frontend (Caller & Command Center):** Built using **React 19, TypeScript, and Vite**, ensuring a fast, type-safe, and responsive user experience. I utilized **Tailwind CSS** for styling, **Framer Motion** for smooth, intuitive UI transitions (critical in high-stress emergency interfaces), and **Leaflet / React-Leaflet** for real-time location mapping. The command center dashboard leverages **Recharts** for visualizing analytics.
+*   **Backend (AI Operator & API):** Powered by **FastAPI** to handle high-performance, asynchronous endpoints. The core intelligence is driven by **LangGraph** and **LangChain** (interfacing with Groq models), which manage the stateful, multi-step emergency response workflow.
+*   **Data Layer:** **SQLAlchemy** serves as the ORM, allowing flexible switching between a local SQLite database for development and a robust PostgreSQL database in production.
+*   **Deployment:** Containerized with Docker and configured for seamless deployment on Heroku.
+
+These specific tools were chosen to balance rapid prototyping speed with the robust, stateful capabilities required for a complex AI agent workflow.
+
+## The Challenge
+The most challenging architectural decision was designing the AI emergency operator. A simple, linear prompt-response loop would not suffice for an emergency situation that requires continuous information gathering, validation, and potential human override. 
+
+To solve this, I implemented a graph-based workflow using **LangGraph** (`server/app/services/ai/agent.py`). I structured the AI's logic into discrete nodes:
+1.  **Interaction & Extraction:** The system parses natural language (e.g., "Help! My father is having a heart attack") to identify the emergency type (medical) and extract vital details.
+2.  **Geocoding:** It resolves the caller's location to determine jurisdiction.
+3.  **Readiness Check & Routing:** It checks if enough information has been gathered to route the call to nearby, appropriate responder units.
+
+Crucially, I designed a **Human-in-the-Loop** gating mechanism. Before any final dispatch occurs, the system transitions to a `pending_review` state. This surfaces the AI's extracted summary and recommended responders to a Command Center dashboard. Human operators can review the AI's assessment and approve or override the dispatch with specific hotlines. This approach ensures safety and accountability—leveraging AI to do the heavy lifting of parsing and routing, while keeping human judgment at the final decision point.
+
+## Final Thoughts
+UFFUN demonstrates how modern AI orchestration can bridge critical gaps in public services. By transforming a stressful, confusing process—finding the right emergency number—into a natural language conversation backed by intelligent routing, the platform proves that technology can significantly streamline emergency response. Building a stateful AI agent that safely integrates human oversight was a rewarding challenge that highlighted the practical power of AI in high-stakes scenarios.
+
+Overall, this project was fun to build *(even though our focus is truly 100% on this one 
+because of  our thesis)*. This project kind of awakened my leadership skills, although I'm always the group leader 
+in school whenever there is a group project, but this one goes beyond that. This not just an academic requirement
+but rather mimics now a real-life development. Furthermore, this project taught me a glimpse on how to be a AI solutions architect.
+To be honest, this whole idea of creating such app came from my groupmate, I just turned their idea to reality.
