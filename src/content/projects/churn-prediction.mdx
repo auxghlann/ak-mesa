@@ -1,0 +1,46 @@
+export const meta = {
+  title: "Telecommunications Customer Churn Prediction",
+  date: "2026",
+  icon: "online_prediction",
+  shortDescription: "A machine learning proof-of-concept predicting customer churn to drive targeted retention strategies for a telecommunications provider.",
+  techStack: ["Python", "Pandas", "Scikit-Learn", "XGBoost", "Seaborn"],
+  links: {
+    livePreview: null,
+    github: "https://github.com/auxghlann/gci_final_assignment",
+    videoDemo: null
+  }
+};
+
+*this is my output on the required final assigment of the GCI World 2026 April course* 
+
+> GCI World (Global Consumer Intelligence) is a free, 3-month online AI and data science program offered by the University of Tokyo's Matsuo-Iwasawa Lab.
+
+## The Problem Statement
+An anonymous telecommunications service provider, "Company A," possessed a vast dataset of over 100,000 customer records but lacked the in-house analytics expertise to derive actionable business value from it. The core objective of this project was to transform raw customer demographic data and usage history into a strategic asset. Specifically, the goal was to identify the primary drivers of customer churn, build a predictive machine learning model to flag at-risk customers, and formulate a data-driven business proposal. This proposal needed to translate complex modeling metrics into tangible business impact, such as revenue lift and risk reduction, tailored for an executive audience.
+
+## Architecture & Tech Stack
+The solution was developed entirely in Python, utilizing a robust data science stack designed for end-to-end machine learning workflows:
+- **Pandas & NumPy**: Used for heavy data wrangling, merging relational datasets (`Client` and `Record`), and imputing missing values (medians for numericals, 'Unknown' categorizations for demographics).
+- **Scikit-Learn**: Leveraged for robust evaluation strategies using `StratifiedKFold` cross-validation to ensure the model generalizes well to unseen data, and `TargetEncoder` to handle high-cardinality categorical features effectively.
+- **XGBoost**: Chosen as the primary modeling algorithm (`XGBClassifier`). XGBoost was selected because of its exceptional performance on tabular data, its ability to capture complex non-linear interactions between usage metrics, and its native handling of class imbalance via the `scale_pos_weight` parameter. Crucially, it provides clear feature importance scores, which are essential for explaining the "why" behind the predictions to stakeholders.
+- **Matplotlib & Seaborn**: Employed for Exploratory Data Analysis (EDA) and visualizing model outcomes, generating correlation heatmaps, feature importance charts, and out-of-fold confusion matrices.
+
+## The Design
+The design of this project was split into rigorous data exploration, strategic feature engineering, and robust model validation.
+
+**1. Data Processing and Feature Engineering**
+Rather than just throwing raw data into an algorithm, I engineered several domain-specific features to capture nuanced customer behavior:
+- **`overage_ratio`** & **`failed_call_ratio`**: To quantify network frustration and bill shock.
+- **`usage_dropoff`**: Comparing 3-month to 6-month average usage to detect early warning signs of abandonment.
+- **`eqp_value_decay`**: Measuring equipment age against handset price to proxy for upgrade eligibility and device satisfaction.
+
+**2. Model Training and Validation**
+To ensure reliability, the XGBoost model was trained using a 5-Fold Stratified Cross-Validation approach. This technique guarantees that the churn class distribution remains consistent across all training and validation splits. Early stopping was implemented to prevent overfitting, and the model was evaluated primarily on the ROC-AUC metric, which is highly effective for imbalanced classification tasks like churn prediction.
+
+**3. Business Translation**
+The technical outputs were explicitly mapped to business insights. By extracting the top 15 feature importances, the model highlighted exact pain points (e.g., equipment age, revenue trends, dropping calls). This allowed for the creation of an executive presentation that abstracted away the code, focusing instead on how the model's predictive power could directly inform targeted marketing interventions and retention campaigns.
+
+*My powerpoint presentation is included in the github link provided if you wish to deep dive on this project's PoC output.*
+
+## Final Thoughts
+This project was an excellent exercise in not just building a highly accurate machine learning model, but in making data science accessible and actionable. The true challenge wasn't just optimizing an XGBoost classifier, but dealing with real-world ambiguities—cleaning messy data, handling missing values strategically, and ultimately bridging the gap between a Jupyter Notebook and a C-suite business proposal. It demonstrates my ability to own a data project end-to-end: from raw CSV files to a finalized, quantifiable business strategy.
