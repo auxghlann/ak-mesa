@@ -136,7 +136,7 @@ export const certifications: Certification[] = [
 
 export const personalInfo = {
   name: "Allan Khester M. Mesa",
-  headline: "Computer Science Graduate & AI Engineer",
+  headline: "Aspiring AI Engineer & AI Automation Specialist",
   email: "khestermesa@gmail.com",
   phone: "09754486106",
   linkedin: "linkedin.com/in/ak-mesa",

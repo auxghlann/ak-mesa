@@ -20,7 +20,7 @@ export default function Home() {
           </div>
         </div>
         <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mb-8">
-          A passionate developer that aims to build AI-powered applications that actually help people.
+          A recent Cum Laude Computer Science graduate and a passionate developer who aims to build AI-powered applications that actually help people.
         </p>
         <div className="flex flex-wrap gap-4">
           <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-2 bg-blue-50 text-google-blue hover:bg-google-blue hover:text-black px-6 py-3 rounded-full font-medium transition-colors shadow-sm hover:shadow-md">
