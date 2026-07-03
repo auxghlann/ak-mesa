@@ -4,6 +4,7 @@ declare module '*.mdx' {
   export const meta: {
     title: string;
     date: string;
+    icon: string;
     shortDescription: string;
     techStack: string[];
     links?: {

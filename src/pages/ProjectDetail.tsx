@@ -44,7 +44,7 @@ export default function ProjectDetail() {
         <div className="flex items-center gap-4 mb-6">
           <div className="p-4 bg-gray-50 rounded-3xl text-gray-700">
             <span className="material-symbols-rounded text-4xl">
-              {id === 'rbai' ? 'smart_toy' : 'dashboard'}
+              {meta.icon}
             </span>
           </div>
           <div>

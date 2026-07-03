@@ -35,7 +35,7 @@ export default function Projects() {
               <div className="flex justify-between items-start mb-4">
                 <div className="p-3 bg-blue-50 rounded-2xl text-google-blue">
                   <span className="material-symbols-rounded text-3xl">
-                    {project.id === 'rbai' ? 'smart_toy' : 'dashboard'}
+                    {project.icon || 'dashboard'}
                   </span>
                 </div>
                 <span className="text-sm text-gray-400 font-medium">{project.date}</span>
