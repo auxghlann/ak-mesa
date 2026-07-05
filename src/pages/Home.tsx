@@ -43,7 +43,7 @@ export default function Home() {
         <div className="md:col-span-7 flex flex-col gap-16">
           <section>
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-sm">
                 <span className="material-symbols-rounded">work</span>
               </div>
               <h2 className="font-headline-lg text-headline-lg">Experience</h2>
@@ -69,8 +69,8 @@ export default function Home() {
 
           <section>
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface">
-                <span className="material-symbols-rounded text-green-600">school</span>
+              <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-white shadow-sm">
+                <span className="material-symbols-rounded">school</span>
               </div>
               <h2 className="font-headline-lg text-headline-lg">Education</h2>
             </div>
@@ -94,7 +94,7 @@ export default function Home() {
         <div className="md:col-span-5 flex flex-col gap-16">
           <section>
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-600">
+              <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center text-white shadow-sm">
                 <span className="material-symbols-rounded fill-current">bolt</span>
               </div>
               <h2 className="font-headline-lg text-headline-lg">Skills Matrix</h2>
@@ -124,7 +124,7 @@ export default function Home() {
 
           <section>
             <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
+              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
                 <span className="material-symbols-rounded">workspace_premium</span>
               </div>
               <h2 className="font-headline-lg text-headline-lg">Certifications</h2>

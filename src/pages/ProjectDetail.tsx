@@ -41,7 +41,7 @@ export default function ProjectDetail() {
 
       <div className="mb-12">
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 bg-primary-fixed rounded-[24px] flex items-center justify-center text-primary">
+          <div className="w-16 h-16 bg-primary rounded-[24px] flex items-center justify-center text-on-primary shadow-md">
             <span className="material-symbols-rounded text-4xl">
               {meta.icon}
             </span>

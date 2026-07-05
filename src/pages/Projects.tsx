@@ -31,7 +31,7 @@ export default function Projects() {
           <Link key={project.id} to={`/projects/${project.id}`} className="block h-full group">
             <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-[32px] p-8 hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full flex flex-col">
               <div className="flex justify-between items-start mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-on-primary group-hover:scale-110 transition-transform shadow-md">
                   <span className="material-symbols-rounded text-[28px]">
                     {project.icon || 'dashboard'}
                   </span>
