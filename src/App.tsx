@@ -29,7 +29,6 @@ function App() {
             <div className="flex gap-4">
               <a className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href={`https://${personalInfo?.github || 'github.com'}`}>GitHub</a>
               <a className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href={`https://${personalInfo?.linkedin || 'linkedin.com'}`}>LinkedIn</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">Privacy Policy</a>
             </div>
           </div>
         </footer>
