@@ -9,28 +9,30 @@ export default function NavBar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="text-xl font-display font-bold text-gray-800 tracking-tight">
-          A<span className="text-google-blue">K</span>.
+    <nav className="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30">
+      <div className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+        <Link to="/" className="font-headline-md text-headline-md font-extrabold text-on-surface">
+          AK<span className="text-primary">.</span>
         </Link>
-        <nav className="flex items-center gap-6">
+        <div className="flex gap-gutter items-center">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
             return (
               <Link
                 key={link.name}
                 to={link.path}
-                className={`font-medium transition-colors ${
-                  isActive ? 'text-google-blue' : 'text-on-surface-variant hover:text-on-surface'
-                }`}
+                className={
+                  isActive 
+                    ? 'text-primary font-bold border-b-2 border-primary pb-1 font-label-lg text-label-lg' 
+                    : 'text-on-surface-variant hover:text-primary transition-colors duration-200 font-label-lg text-label-lg'
+                }
               >
                 {link.name}
               </Link>
             );
           })}
-        </nav>
+        </div>
       </div>
-    </header>
+    </nav>
   );
 }

@@ -9,26 +9,20 @@ interface TimelineItemProps {
 }
 
 export function TimelineItem({ title, subtitle, date, children, isLast = false }: TimelineItemProps) {
+  // We'll use a generic blue dot for all items here, but you can pass colors as props if needed
   return (
-    <div className="relative pl-8 sm:pl-32 py-6 group">
-      {/* Date (Desktop) */}
-      <div className="hidden sm:flex flex-col items-start absolute left-0 text-sm font-medium text-on-surface-variant mt-1 w-24">
-        {date}
-      </div>
-
-      {/* Timeline Line & Dot */}
-      <div className="absolute left-0 sm:left-28 h-full flex flex-col items-center">
-        <div className="w-3 h-3 bg-gray-200 rounded-full mt-1.5 group-hover:bg-google-blue transition-colors shadow-sm ring-4 ring-white" />
-        {!isLast && <div className="w-0.5 h-full bg-gray-100 mt-2" />}
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-col items-start">
-        <h3 className="text-xl font-display font-semibold text-gray-900">{title}</h3>
-        <p className="text-md text-google-blue font-medium mb-1">{subtitle}</p>
-        <span className="sm:hidden text-sm text-on-surface-variant mb-3">{date}</span>
-        <div className="mt-2 text-gray-600 leading-relaxed text-sm sm:text-base">
-          {children}
+    <div className={`relative ${isLast ? 'mb-0' : 'mb-10'}`}>
+      <span className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-surface"></span>
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-4">
+        <div className="font-label-sm text-label-sm text-on-surface-variant pt-1 uppercase tracking-wider">
+          {date}
+        </div>
+        <div>
+          <h3 className="font-headline-md text-headline-md text-on-surface mb-1 text-[20px] leading-tight">{title}</h3>
+          <p className="font-label-lg text-label-lg text-primary mb-3">{subtitle}</p>
+          <div className="font-body-md text-body-md text-on-surface-variant space-y-2">
+            {children}
+          </div>
         </div>
       </div>
     </div>
@@ -37,7 +31,7 @@ export function TimelineItem({ title, subtitle, date, children, isLast = false }
 
 export function Timeline({ children }: { children: ReactNode }) {
   return (
-    <div className="relative">
+    <div className="relative pl-6 border-l-2 border-surface-variant ml-6">
       {children}
     </div>
   );

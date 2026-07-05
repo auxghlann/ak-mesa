@@ -1,5 +1,4 @@
 import { useParams, Link } from 'react-router-dom';
-import Chip from '../components/Chip';
 
 // Load MDX modules eagerly for now to match Projects.tsx behavior
 const mdxModules = import.meta.glob('../content/projects/*.mdx', { eager: true });
@@ -16,9 +15,9 @@ export default function ProjectDetail() {
 
   if (!module) {
     return (
-      <div className="max-w-4xl mx-auto px-6 py-20 text-center">
-        <h1 className="text-4xl font-display font-bold text-gray-900 mb-4">Project not found</h1>
-        <Link to="/projects" className="text-google-blue hover:underline">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
+        <h1 className="font-headline-xl text-headline-xl text-on-surface mb-4">Project not found</h1>
+        <Link to="/projects" className="text-primary hover:underline font-label-lg text-label-lg">
           &larr; Back to Projects
         </Link>
       </div>
@@ -34,62 +33,62 @@ export default function ProjectDetail() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-12">
-      <Link to="/projects" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-google-blue font-medium mb-8 transition-colors">
+    <div className="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+      <Link to="/projects" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-label-lg text-label-lg mb-8 transition-colors">
         <span className="material-symbols-rounded text-[20px]">arrow_back</span>
         Back to Projects
       </Link>
 
       <div className="mb-12">
         <div className="flex items-center gap-4 mb-6">
-          <div className="p-4 bg-gray-50 rounded-3xl text-gray-700">
+          <div className="w-16 h-16 bg-primary-fixed rounded-[24px] flex items-center justify-center text-primary">
             <span className="material-symbols-rounded text-4xl">
               {meta.icon}
             </span>
           </div>
           <div>
-            <h1 className="text-4xl font-display font-bold text-gray-900 leading-tight">
+            <h1 className="font-headline-xl text-headline-xl text-on-surface leading-tight">
               {meta.title}
             </h1>
-            <span className="text-gray-500 font-medium">{meta.date}</span>
+            <span className="font-label-md text-on-surface-variant font-medium">{meta.date}</span>
           </div>
         </div>
 
-        <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+        <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
           {meta.shortDescription}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-8">
           {meta.techStack?.map((tech: string) => (
-            <Chip key={tech} className="bg-white border-gray-200 text-gray-700">
+            <span key={tech} className="bg-surface-container px-3 py-1 rounded-lg font-label-sm text-label-sm text-on-surface">
               {tech}
-            </Chip>
+            </span>
           ))}
         </div>
 
         {meta.links && (
-          <div className="flex flex-wrap gap-4 border-b border-gray-100 pb-8">
+          <div className="flex flex-wrap gap-4 border-b border-outline-variant/30 pb-8">
             {meta.links.livePreview && (
-              <a href={meta.links.livePreview} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-google-blue text-white px-4 py-2 rounded-full font-medium hover:bg-blue-600 transition-colors text-sm">
-                <span className="material-symbols-rounded text-[18px]">open_in_new</span>
+              <a href={meta.links.livePreview} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm">
+                <span className="material-symbols-rounded text-[20px]">open_in_new</span>
                 Live Preview
               </a>
             )}
             {meta.links.github && (
-              <a href={meta.links.github} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors text-sm">
-                <span className="material-symbols-rounded text-[18px]">code</span>
+              <a href={meta.links.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 border border-outline text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container transition-colors">
+                <span className="material-symbols-rounded text-[20px]">code</span>
                 GitHub
               </a>
             )}
             {meta.links.videoDemo && (
-              <a href={meta.links.videoDemo} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-google-red text-white px-4 py-2 rounded-full font-medium hover:bg-red-600 transition-colors text-sm">
-                <span className="material-symbols-rounded text-[18px]">play_circle</span>
+              <a href={meta.links.videoDemo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed-variant px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-secondary-container hover:text-white transition-colors">
+                <span className="material-symbols-rounded text-[20px]">play_circle</span>
                 Video Demo
               </a>
             )}
             {meta.links.article && (
-              <a href={meta.links.article} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-google-green text-white px-4 py-2 rounded-full font-medium hover:bg-green-600 transition-colors text-sm">
-                <span className="material-symbols-rounded text-[18px]">article</span>
+              <a href={meta.links.article} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors">
+                <span className="material-symbols-rounded text-[20px]">article</span>
                 Featured Post
               </a>
             )}
@@ -109,14 +108,14 @@ export default function ProjectDetail() {
                 key={imgPath} 
                 src={url} 
                 alt={`${meta.title} screenshot ${idx + 1}`} 
-                className={`w-full h-auto rounded-2xl shadow-sm border border-gray-200 ${isLastOdd ? 'md:col-span-2' : ''}`}
+                className={`w-full h-auto rounded-[24px] shadow-sm border border-outline-variant/30 ${isLastOdd ? 'md:col-span-2' : ''}`}
               />
             );
           })}
         </div>
       )}
 
-      <div className="prose prose-lg prose-blue max-w-none text-gray-700 prose-headings:font-display prose-headings:font-bold prose-a:text-google-blue">
+      <div className="prose prose-lg max-w-none text-on-surface-variant prose-headings:font-headline-md prose-headings:text-on-surface prose-a:text-primary">
         <MDXContent />
       </div>
     </div>

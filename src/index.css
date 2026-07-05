@@ -2,25 +2,109 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-sans: "Roboto", sans-serif;
-  --font-display: "Outfit", sans-serif;
+  --color-on-tertiary-container: #fffbff;
+  --color-primary-container: #2771df;
+  --color-on-secondary-fixed-variant: #930004;
+  --color-surface-variant: #e1e3e4;
+  --color-on-surface-variant: #424753;
+  --color-surface: #f8f9fa;
+  --color-on-primary-fixed: #001a41;
+  --color-on-primary-fixed-variant: #004494;
+  --color-inverse-primary: #adc6ff;
+  --color-on-tertiary: #ffffff;
+  --color-surface-container-highest: #e1e3e4;
+  --color-inverse-on-surface: #f0f1f2;
+  --color-on-tertiary-fixed-variant: #5c4300;
+  --color-on-tertiary-fixed: #261a00;
+  --color-secondary: #b51b15;
+  --color-on-surface: #191c1d;
+  --color-on-secondary-container: #fffbff;
+  --color-surface-dim: #d9dadb;
+  --color-on-primary-container: #fefcff;
+  --color-tertiary: #765700;
+  --color-inverse-surface: #2e3132;
+  --color-secondary-container: #d9372b;
+  --color-surface-container-low: #f3f4f5;
+  --color-tertiary-container: #956e00;
+  --color-primary: #0058bd;
+  --color-surface-container-high: #e7e8e9;
+  --color-tertiary-fixed-dim: #fbbc06;
+  --color-on-error-container: #93000a;
+  --color-on-background: #191c1d;
+  --color-on-primary: #ffffff;
+  --color-primary-fixed-dim: #adc6ff;
+  --color-outline-variant: #c2c6d5;
+  --color-surface-container-lowest: #ffffff;
+  --color-background: #f8f9fa;
+  --color-on-secondary: #ffffff;
+  --color-outline: #727785;
+  --color-error: #ba1a1a;
+  --color-on-secondary-fixed: #410001;
+  --color-secondary-fixed: #ffdad5;
+  --color-surface-bright: #f8f9fa;
+  --color-error-container: #ffdad6;
+  --color-secondary-fixed-dim: #ffb4a9;
+  --color-surface-container: #edeeef;
+  --color-primary-fixed: #d8e2ff;
+  --color-surface-tint: #005ac1;
+  --color-on-error: #ffffff;
+  --color-tertiary-fixed: #ffdea0;
 
-  --color-google-blue: #4285F4;
-  --color-google-red: #EA4335;
-  --color-google-yellow: #FBBC05;
-  --color-google-green: #34A853;
-  --color-surface: #F8F9FA;
-  --color-surface-hover: #F1F3F4;
-  --color-on-surface: #202124;
-  --color-on-surface-variant: #5F6368;
+  --font-headline-xl: "Manrope", sans-serif;
+  --font-headline-lg: "Manrope", sans-serif;
+  --font-headline-md: "Manrope", sans-serif;
+  --font-headline-lg-mobile: "Manrope", sans-serif;
+  --font-label-lg: "Hanken Grotesk", sans-serif;
+  --font-label-sm: "Hanken Grotesk", sans-serif;
+  --font-body-lg: "Hanken Grotesk", sans-serif;
+  --font-body-md: "Hanken Grotesk", sans-serif;
+
+  --text-headline-xl: 50px;
+  --text-headline-xl--line-height: 58px;
+  --text-headline-xl--letter-spacing: -0.02em;
+  --text-headline-xl--font-weight: 800;
+
+  --text-label-lg: 16px;
+  --text-label-lg--line-height: 22px;
+  --text-label-lg--letter-spacing: 0.1px;
+  --text-label-lg--font-weight: 600;
+
+  --text-body-lg: 20px;
+  --text-body-lg--line-height: 30px;
+  --text-body-lg--font-weight: 400;
+
+  --text-headline-lg: 34px;
+  --text-headline-lg--line-height: 42px;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: 26px;
+  --text-headline-md--line-height: 34px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-md: 18px;
+  --text-body-md--line-height: 26px;
+  --text-body-md--font-weight: 400;
+
+  --text-headline-lg-mobile: 30px;
+  --text-headline-lg-mobile--line-height: 38px;
+  --text-headline-lg-mobile--font-weight: 700;
+
+  --text-label-sm: 14px;
+  --text-label-sm--line-height: 18px;
+  --text-label-sm--letter-spacing: 0.5px;
+  --text-label-sm--font-weight: 500;
+  
+  --spacing-base: 8px;
+  --spacing-margin-mobile: 16px;
+  --spacing-gutter: 24px;
+  --spacing-container-max: 1200px;
+  --spacing-section-gap: 80px;
+  --spacing-margin-desktop: 40px;
 }
 
 @layer base {
   body {
-    @apply font-sans bg-white text-on-surface antialiased;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-medium text-on-surface;
+    @apply bg-surface text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container;
   }
 }
