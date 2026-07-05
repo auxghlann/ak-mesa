@@ -60,7 +60,7 @@
   --font-body-md: "Hanken Grotesk", sans-serif;
 
   --text-headline-xl: 50px;
-  --text-headline-xl--line-height: 58px;
+  --text-headline-xl--line-height: 56px;
   --text-headline-xl--letter-spacing: -0.02em;
   --text-headline-xl--font-weight: 800;
 
@@ -69,8 +69,8 @@
   --text-label-lg--letter-spacing: 0.1px;
   --text-label-lg--font-weight: 600;
 
-  --text-body-lg: 20px;
-  --text-body-lg--line-height: 30px;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 25px;
   --text-body-lg--font-weight: 400;
 
   --text-headline-lg: 34px;
@@ -78,7 +78,7 @@
   --text-headline-lg--letter-spacing: -0.01em;
   --text-headline-lg--font-weight: 700;
 
-  --text-headline-md: 26px;
+  --text-headline-md: 24px;
   --text-headline-md--line-height: 34px;
   --text-headline-md--font-weight: 600;
 
@@ -94,7 +94,7 @@
   --text-label-sm--line-height: 18px;
   --text-label-sm--letter-spacing: 0.5px;
   --text-label-sm--font-weight: 500;
-  
+
   --spacing-base: 8px;
   --spacing-margin-mobile: 16px;
   --spacing-gutter: 24px;
