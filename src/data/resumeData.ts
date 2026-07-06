@@ -49,7 +49,28 @@ export const educations: Education[] = [
     degree: "Bachelor of Science in Computer Science",
     institution: "University of Saint Louis Tuguegarao - Tuguegarao City, Cagayan Valley",
     date: "2022 - 2026",
-    honors: "Cum Laude, Consistent Dean's Lister with Highest Honor"
+    honors: "Cum Laude (GWA: 94.42%), Consistent Dean's Lister with Highest Honor"
+  },
+  {
+    id: "shs",
+    degree: "Senior High School - (STEM)",
+    institution: "Saint Paul University Philippines - Tuguegarao City, Cagayan Valley",
+    date: "2020 - 2022",
+    honors: "With Honors"
+  },
+  {
+    id: "jhs",
+    degree: "Junior High School",
+    institution: "Wonderful Grace Learning Center - Luna, Quirino, Isabela",
+    date: "2017 - 2020",
+    honors: "With High Honors, Consistent Gold Awardee"
+  },
+  {
+    id: "elem",
+    degree: "Elementary",
+    institution: "Luna-Suerte Elementary School - Luna, Quirino, Isabela",
+    date: "2010 - 2017",
+    honors: "Valedictorian, Consistent Top 1 from Grade 1 - 6"
   }
 ];
 
