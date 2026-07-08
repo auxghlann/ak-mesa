@@ -119,6 +119,13 @@ export const certifications: Certification[] = [
     link: "https://www.datacamp.com/statement-of-accomplishment/track/a8e758409c8f1b3719269f1a7b24aa6b38ee3530?raw=1"
   },
   {
+    id: "cert-kaggle-agents",
+    name: "5-Day AI Agents Intensive Course with Google",
+    issuer: "Kaggle",
+    date: "2025",
+    link: "https://www.kaggle.com/certification/badges/khestermesa/105"
+  },
+  {
     id: "cert-ibm",
     name: "Artificial Intelligence Fundamentals",
     issuer: "IBM",

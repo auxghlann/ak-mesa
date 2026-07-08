@@ -51,13 +51,16 @@ Extracting the actual job title from an email proved to be the hardest challenge
 - **The Fix**: I pivoted to extracting the raw `text/html` payload, parsing it with `BeautifulSoup4` to cleanly strip all HTML tags and separate blocks with newlines. I then implemented a series of Regex rules to instantly vaporize massive tracking URLs, hunt down and destroy invisible unicode characters, and aggressively truncate massive "Similar Jobs" recommendations at the footer of the emails. This maxed out token efficiency and provided the LLM with perfectly clean, dense text.
 
 **3. Smart Google Sheets Upserting**
-Rather than blindly appending rows and creating duplicates every time the script ran, I built an intelligent deduplication logic. The final node reads the existing Google Sheet, matches entries based on `Company Name` and `Job Title`, and selectively executes `update` operations to overwrite the status (e.g., from "Applied" to "Application Viewed") while appending brand new jobs to the bottom.
+Rather than blindly appending rows and creating duplicates every time the script ran, I built a deduplication logic for inserting rows. The final node reads the existing Google Sheet, matches entries based on `Company Name`,`Job Title`, and `Status` and selectively executes `update` operations to overwrite the status (e.g., from "Applied" to "Application Viewed") while appending brand new jobs to the bottom.
+Furthermore, since fetching email gets the recent emails (so under the hood the recent email starts from the first index), I reversed the message so that the said email starts from the last to avoid race condition.
 
 <div className="my-8 not-prose">
   <img src={ss2Img} alt="Automation Result Tracker" className="w-full h-auto rounded-2xl shadow-sm border border-gray-200" />
 </div>
 
 ## Final Thoughts
+Overall, this proejct taught me that AI is not only for conversational chatbots, but can be a practical, background utility that solves real-world workflow problems. 
+
 Building this automation highlighted the power of combining modern AI orchestration tools with standard APIs. By leveraging a dual-model approach, strict state management via LangGraph, and aggressive data-cleaning heuristics, I was able to transform a brittle manual task into a highly reliable and cost-efficient autonomous system. 
 
-Overall, this proejct taught me that AI is not only for conversational chatbots, but can be a practical, background utility that solves real-world workflow problems. This project is a proof and a strong example of my skills in AI engineering and AI automation.
+*This project is a proof and a strong example of my competency in AI engineering and AI automation.*
