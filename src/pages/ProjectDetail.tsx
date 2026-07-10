@@ -1,19 +1,63 @@
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-// Load MDX modules eagerly for now to match Projects.tsx behavior
-const mdxModules = import.meta.glob('../content/projects/*.mdx', { eager: true });
-
-// Load all project images to map them dynamically
-const imageAssets = import.meta.glob<{ default: string }>('../assets/projects/**/*.{png,jpg,jpeg,svg,webp}', { eager: true });
+type Project = {
+  id: string;
+  slug: string;
+  title: string;
+  date: string;
+  icon: string;
+  short_description: string;
+  content: string;
+  tech_stack: string[];
+  links: {
+    livePreview?: string | null;
+    github?: string | null;
+    videoDemo?: string | null;
+    article?: string | null;
+    images?: string[];
+  };
+};
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  
-  // Find the exact module for the requested ID
-  const projectPath = Object.keys(mdxModules).find(path => path.endsWith(`/${id}.mdx`));
-  const module = projectPath ? mdxModules[projectPath] as any : null;
+  const [project, setProject] = useState<Project | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!module) {
+  useEffect(() => {
+    async function fetchProject() {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('slug', id)
+        .single();
+        
+      if (!error && data) {
+        setProject(data as Project);
+      } else if (error) {
+        console.error('Error fetching project:', error.message);
+      }
+      setIsLoading(false);
+    }
+    
+    if (id) {
+      fetchProject();
+    }
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
+        <h1 className="font-headline-xl text-headline-xl text-on-surface mb-4 animate-pulse">Loading project...</h1>
+      </div>
+    );
+  }
+
+  if (!project) {
     return (
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
         <h1 className="font-headline-xl text-headline-xl text-on-surface mb-4">Project not found</h1>
@@ -24,13 +68,8 @@ export default function ProjectDetail() {
     );
   }
 
-  const MDXContent = module.default;
-  const meta = module.meta;
-
-  const getImageUrl = (imagePath: string) => {
-    const fullPath = `../assets/projects/${imagePath}`;
-    return imageAssets[fullPath]?.default || '';
-  };
+  const { title, date, icon, short_description, content, tech_stack, links } = project;
+  const images = links?.images || [];
 
   return (
     <div className="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
@@ -43,51 +82,51 @@ export default function ProjectDetail() {
         <div className="flex items-center gap-4 mb-6">
           <div className="w-16 h-16 bg-primary rounded-[24px] flex items-center justify-center text-on-primary shadow-md">
             <span className="material-symbols-rounded text-4xl">
-              {meta.icon}
+              {icon}
             </span>
           </div>
           <div>
             <h1 className="font-headline-xl text-headline-xl text-on-surface leading-tight">
-              {meta.title}
+              {title}
             </h1>
-            <span className="font-label-md text-on-surface-variant font-medium">{meta.date}</span>
+            <span className="font-label-md text-on-surface-variant font-medium">{date}</span>
           </div>
         </div>
 
         <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
-          {meta.shortDescription}
+          {short_description}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-8">
-          {meta.techStack?.map((tech: string) => (
+          {tech_stack?.map((tech: string) => (
             <span key={tech} className="bg-surface-container px-3 py-1 rounded-lg font-label-sm text-label-sm text-on-surface">
               {tech}
             </span>
           ))}
         </div>
 
-        {meta.links && (
+        {links && (
           <div className="flex flex-wrap gap-4 border-b border-outline-variant/30 pb-8">
-            {meta.links.livePreview && (
-              <a href={meta.links.livePreview} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm">
+            {links.livePreview && (
+              <a href={links.livePreview} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm">
                 <span className="material-symbols-rounded text-[20px]">open_in_new</span>
                 Live Preview
               </a>
             )}
-            {meta.links.github && (
-              <a href={meta.links.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 border border-outline text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container transition-colors">
+            {links.github && (
+              <a href={links.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 border border-outline text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container transition-colors">
                 <span className="material-symbols-rounded text-[20px]">code</span>
                 GitHub
               </a>
             )}
-            {meta.links.videoDemo && (
-              <a href={meta.links.videoDemo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed-variant px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-secondary-container hover:text-white transition-colors">
+            {links.videoDemo && (
+              <a href={links.videoDemo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed-variant px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-secondary-container hover:text-white transition-colors">
                 <span className="material-symbols-rounded text-[20px]">play_circle</span>
                 Video Demo
               </a>
             )}
-            {meta.links.article && (
-              <a href={meta.links.article} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors">
+            {links.article && (
+              <a href={links.article} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors">
                 <span className="material-symbols-rounded text-[20px]">article</span>
                 Featured Post
               </a>
@@ -96,18 +135,16 @@ export default function ProjectDetail() {
         )}
       </div>
 
-      {meta.images && meta.images.length > 0 && (
+      {images.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-          {meta.images.map((imgPath: string, idx: number) => {
-            const url = getImageUrl(imgPath);
-            if (!url) return null;
+          {images.map((url: string, idx: number) => {
             // Make the last image span 2 columns if there is an odd number of images
-            const isLastOdd = idx === meta.images.length - 1 && meta.images.length % 2 !== 0;
+            const isLastOdd = idx === images.length - 1 && images.length % 2 !== 0;
             return (
               <img 
-                key={imgPath} 
+                key={url} 
                 src={url} 
-                alt={`${meta.title} screenshot ${idx + 1}`} 
+                alt={`${title} screenshot ${idx + 1}`} 
                 className={`w-full h-auto rounded-[24px] shadow-sm border border-outline-variant/30 ${isLastOdd ? 'md:col-span-2' : ''}`}
               />
             );
@@ -115,8 +152,10 @@ export default function ProjectDetail() {
         </div>
       )}
 
-      <div className="prose prose-lg max-w-none text-on-surface-variant prose-headings:font-headline-md prose-headings:text-on-surface prose-a:text-primary">
-        <MDXContent />
+      <div className="prose prose-lg max-w-none text-on-surface-variant prose-headings:font-headline-md prose-headings:text-on-surface prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {content}
+        </ReactMarkdown>
       </div>
     </div>
   );

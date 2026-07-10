@@ -29,3 +29,8 @@ context/*
 
 .vercel
 .env*
+.gemini
+
+# db
+script/
+*.sql
