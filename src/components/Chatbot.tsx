@@ -18,6 +18,14 @@ const Chatbot: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [threadId] = useState(() => {
+    try {
+      return crypto.randomUUID();
+    } catch {
+      return '00000000-0000-0000-0000-000000000000'; // Fallback if not secure context
+    }
+  });
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -44,7 +52,7 @@ const Chatbot: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ message: userMessage, thread_id: threadId }),
       });
 
       if (!response.ok) {
