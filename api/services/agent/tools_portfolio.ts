@@ -8,7 +8,7 @@
 */
 import { z } from "zod";
 import { tool } from "langchain";
-import { personalInfo, experiences, skills } from "../../../src/data/resumeData";
+import { personalInfo, experiences, skills } from "../../../src/data/resumeData.js";
 
 export const getExperience = tool(
     async () => {

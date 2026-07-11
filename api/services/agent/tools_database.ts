@@ -1,13 +1,24 @@
-import "dotenv/config";
 import { z } from "zod";
 import { tool } from "langchain";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+let supabaseInstance: any = null;
+function getSupabase() {
+    if (!supabaseInstance) {
+        const supabaseUrl = process.env.VITE_SUPABASE_URL;
+        const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+        if (!supabaseUrl || !supabaseAnonKey) {
+            console.error("CRITICAL: Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in environment variables.");
+            throw new Error("Missing Supabase credentials in Vercel Dashboard");
+        }
+        supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+    }
+    return supabaseInstance;
+}
+
 export const listProjects = tool(
     async () => {
+        const supabase = getSupabase();
         const { data, error } = await supabase
             .from('projects')
             .select('slug, title, short_description');
@@ -28,6 +39,7 @@ export const listProjects = tool(
 
 export const getProjectDetails = tool(
     async ({ project_slug }) => {
+        const supabase = getSupabase();
         const { data, error } = await supabase
             .from('projects')
             .select('slug, title, date, ai_summary, tech_stack, links')

@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { initializeAgent } from './services/agent/agent';
+import { initializeAgent } from './services/agent/agent.js';
 import { z } from 'zod';
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';

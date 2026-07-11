@@ -1,11 +1,10 @@
-import "dotenv/config"
 import { StateGraph, MessagesAnnotation, START, END, MemorySaver } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { SystemMessage, RemoveMessage, AIMessage, ToolMessage } from "@langchain/core/messages";
 import { ChatGroq } from "@langchain/groq";
 import { z } from "zod";
-import { getExperience, getPersonalInfo, getSkills } from "./tools_portfolio"
-import { listProjects, getProjectDetails } from "./tools_database"
+import { getExperience, getPersonalInfo, getSkills } from "./tools_portfolio.js"
+import { listProjects, getProjectDetails } from "./tools_database.js"
 
 export async function initializeAgent() {
 
