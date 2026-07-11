@@ -90,7 +90,9 @@ export default function ProjectDetail() {
             <h1 className="font-headline-xl text-headline-xl text-on-surface leading-tight">
               {title}
             </h1>
-            <span className="font-label-md text-on-surface-variant font-medium">{date}</span>
+            <span className="font-label-md text-on-surface-variant font-medium">
+              {new Date(date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
           </div>
         </div>
 

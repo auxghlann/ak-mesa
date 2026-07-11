@@ -60,7 +60,9 @@ export default function Projects() {
                       {project.icon || 'dashboard'}
                     </span>
                   </div>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">{project.date}</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">
+                    {new Date(project.date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
                 </div>
 
                 <h2 className="font-headline-md text-headline-md mb-4 text-[24px] leading-tight text-on-surface">{project.title}</h2>

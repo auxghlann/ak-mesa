@@ -5,13 +5,14 @@ import Home from './pages/Home';
 import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import NotFound from './pages/NotFound';
+import Chatbot from './components/Chatbot';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col relative">
         <NavBar />
-        <main className="flex-grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop">
+        <main className="flex-grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop relative">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/projects" element={<Projects />} />
@@ -32,6 +33,8 @@ function App() {
             </div>
           </div>
         </footer>
+
+        <Chatbot />
       </div>
     </Router>
   );
