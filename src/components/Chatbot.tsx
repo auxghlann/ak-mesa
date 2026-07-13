@@ -58,8 +58,9 @@ const Chatbot: React.FC = () => {
   const handleSend = async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
 
+    const newMessages: Message[] = [...messages, { role: 'user', content: messageText }];
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: messageText }]);
+    setMessages(newMessages);
     setIsLoading(true);
 
     try {
@@ -68,7 +69,7 @@ const Chatbot: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: messageText, thread_id: threadId }),
+        body: JSON.stringify({ messages: newMessages, thread_id: threadId }),
       });
 
       if (!response.ok) {

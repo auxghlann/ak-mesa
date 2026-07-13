@@ -3,6 +3,7 @@ import { initializeAgent } from './services/agent/agent.js';
 import { z } from 'zod';
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
+import { HumanMessage, AIMessage } from "@langchain/core/messages";
 
 // Initialize rate limiter: 5 requests per 10 seconds per IP
 const ratelimit = new Ratelimit({
@@ -13,8 +14,11 @@ const ratelimit = new Ratelimit({
 
 // Zod Schema to validate incoming requests
 export const ChatRequestSchema = z.object({
-  message: z.string().min(1, "Message cannot be empty").max(500, "Message is too long (max 500 characters)"),
-  thread_id: z.uuid("Invalid thread_id format"),
+  messages: z.array(z.object({
+    role: z.enum(["user", "bot"]),
+    content: z.string().max(2000, "Message is too long")
+  })).min(1, "Messages array cannot be empty"),
+  thread_id: z.string().uuid("Invalid thread_id format").catch('00000000-0000-0000-0000-000000000000'),
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -68,10 +72,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const validatedData = ChatRequestSchema.parse(req.body);
 
+    const mappedMessages = validatedData.messages.map(m => 
+      m.role === "bot" ? new AIMessage(m.content) : new HumanMessage(m.content)
+    );
+
     // 3. Agent Invocation
     const agent = await initializeAgent();
     const response = await agent.invoke(
-      { messages: [{ role: "user", content: validatedData.message }] },
+      { messages: mappedMessages },
       { configurable: { thread_id: validatedData.thread_id } }
     );
 
