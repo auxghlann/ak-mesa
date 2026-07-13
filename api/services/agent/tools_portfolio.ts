@@ -8,7 +8,7 @@
 */
 import { z } from "zod";
 import { tool } from "langchain";
-import { personalInfo, experiences, skills } from "../../../src/data/resumeData.js";
+import { personalInfo, experiences, skills, educations, certifications } from "../../../src/data/resumeData.js";
 
 export const getExperience = tool(
     async () => {
@@ -39,6 +39,28 @@ export const getSkills = tool(
     {
         name: "get_skills",
         description: "Use this tool to get the relevant hard and soft skills of the subject.",
+        schema: z.object({})
+    }
+)
+
+export const getEducation = tool(
+    async () => {
+        return `My education history is: ${JSON.stringify(educations, null, 2)}`
+    },
+    {
+        name: "get_education",
+        description: "Use this tool to get the educational background of the subject.",
+        schema: z.object({})
+    }
+)
+
+export const getCertifications = tool(
+    async () => {
+        return `My certifications are: ${JSON.stringify(certifications, null, 2)}`
+    },
+    {
+        name: "get_certifications",
+        description: "Use this tool to get the certifications achieved by the subject.",
         schema: z.object({})
     }
 )
