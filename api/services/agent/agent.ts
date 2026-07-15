@@ -2,22 +2,17 @@ import "dotenv/config"
 import { StateGraph, MessagesAnnotation, START, END } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { SystemMessage, RemoveMessage, AIMessage, ToolMessage } from "@langchain/core/messages";
-import { ChatGroq } from "@langchain/groq";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { z } from "zod";
 import { getExperience, getPersonalInfo, getSkills, getEducation, getCertifications } from "./tools_portfolio.js"
 import { listProjects, getProjectDetails } from "./tools_database.js"
 
 export async function initializeAgent() {
 
-    // 1. Dual Model Initialization
-    const toolCallerModel = new ChatGroq({
-        apiKey: process.env.GROQ_API_KEY,
-        model: "meta-llama/llama-4-scout-17b-16e-instruct"
-    });
-
-    const responderModel = new ChatGroq({
-        apiKey: process.env.GROQ_API_KEY,
-        model: "llama-3.3-70b-versatile"
+    // 1. Model Initialization
+    const model = new ChatGoogleGenerativeAI({
+        apiKey: process.env.GOOGLE_API_KEY,
+        model: "gemini-3.1-flash-lite"
     });
 
     // 3. Define Graph Nodes
@@ -41,7 +36,7 @@ CRITICAL: You are exclusively designed to answer questions about Allan. If the u
 
     const tools = [getExperience, getPersonalInfo, getSkills, getEducation, getCertifications, listProjects, getProjectDetails];
     const toolNode = new ToolNode(tools);
-    const modelWithTools = toolCallerModel.bindTools(tools);
+    const modelWithTools = model.bindTools(tools);
 
     async function synthesizeResponse(state: typeof MessagesAnnotation.State) {
         const synthesizePrompt = new SystemMessage(`
@@ -55,7 +50,7 @@ IMPORTANT RULES:
             `);
 
         const messages = [synthesizePrompt, ...state.messages];
-        const response = await responderModel.invoke(messages);
+        const response = await model.invoke(messages);
 
         // 4. Token Pruning: Remove all intermediate tool calls from the history!
         const cleanups = [];
@@ -76,7 +71,7 @@ IMPORTANT RULES:
         if (lastMessage.tool_calls && lastMessage.tool_calls.length > 0) {
             return "tools";
         }
-        // If llama-4 answered directly without tools, just end the turn!
+        // If the model answered directly without tools, just end the turn!
         return END;
     }
 

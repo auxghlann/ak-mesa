@@ -49,7 +49,7 @@ export const educations: Education[] = [
     degree: "Bachelor of Science in Computer Science",
     institution: "University of Saint Louis Tuguegarao - Tuguegarao City, Cagayan Valley",
     date: "2022 - 2026",
-    honors: "Cum Laude (GWA: 94.42%), Consistent Dean's Lister with Highest Honor"
+    honors: "Cum Laude Graduate (GWA: 94.42%), Consistent Dean's Lister with Highest Honor"
   },
   {
     id: "shs",
