@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useAdminHotkey } from '../hooks/useAdminHotkey';
 
 export default function NavBar() {
   const location = useLocation();
+  useAdminHotkey();
 
   const navLinks = [
     { name: 'Home', path: '/' },
