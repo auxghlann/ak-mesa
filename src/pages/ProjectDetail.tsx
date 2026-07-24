@@ -36,7 +36,7 @@ export default function ProjectDetail() {
         .select('*')
         .eq('slug', id)
         .single();
-        
+
       if (!error && data) {
         setProject(data as Project);
       } else if (error) {
@@ -44,7 +44,7 @@ export default function ProjectDetail() {
       }
       setIsLoading(false);
     }
-    
+
     if (id) {
       fetchProject();
     }
@@ -69,7 +69,7 @@ export default function ProjectDetail() {
     );
   }
 
-  const { title, date, icon, short_description, content, tech_stack, links } = project;
+  const { title, date, short_description, content, tech_stack, links } = project;
   const images = links?.images || [];
 
   return (
@@ -81,11 +81,6 @@ export default function ProjectDetail() {
 
       <div className="mb-12">
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 bg-primary rounded-[24px] flex items-center justify-center text-on-primary shadow-md">
-            <span className="material-symbols-rounded text-4xl">
-              {icon}
-            </span>
-          </div>
           <div>
             <h1 className="font-headline-xl text-headline-xl text-on-surface leading-tight">
               {title}
@@ -144,10 +139,10 @@ export default function ProjectDetail() {
             // Make the last image span 2 columns if there is an odd number of images
             const isLastOdd = idx === images.length - 1 && images.length % 2 !== 0;
             return (
-              <img 
-                key={url} 
-                src={url} 
-                alt={`${title} screenshot ${idx + 1}`} 
+              <img
+                key={url}
+                src={url}
+                alt={`${title} screenshot ${idx + 1}`}
                 className={`w-full h-auto rounded-[24px] shadow-sm border border-outline-variant/30 ${isLastOdd ? 'md:col-span-2' : ''}`}
               />
             );
