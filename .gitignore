@@ -35,3 +35,8 @@ tests/
 # db
 scripts/
 *.sql
+
+# Workflow docs and agent rules
+spec/
+.agents/
+docs/

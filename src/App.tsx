@@ -6,6 +6,10 @@ import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import NotFound from './pages/NotFound';
 import Chatbot from './components/Chatbot';
+import AdminLogin from './pages/admin/AdminLogin';
+import AdminProjects from './pages/admin/AdminProjects';
+import AdminProjectForm from './pages/admin/AdminProjectForm';
+import AdminRoute from './components/admin/AdminRoute';
 
 function App() {
   return (
@@ -17,6 +21,34 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
+
+            {/* Admin CMS Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin/projects"
+              element={
+                <AdminRoute>
+                  <AdminProjects />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/projects/new"
+              element={
+                <AdminRoute>
+                  <AdminProjectForm />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/projects/edit/:id"
+              element={
+                <AdminRoute>
+                  <AdminProjectForm />
+                </AdminRoute>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -29,7 +61,7 @@ function App() {
             </span>
             <div className="flex gap-4">
               <a className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href={`https://${personalInfo?.github || 'github.com'}`}>GitHub</a>
-              <a className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href={`https://${personalInfo?.linkedin || 'linkedin.com'}`}>LinkedIn</a>
+              <a className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href={`https://${personalInfo?.linkedin || 'github.com'}`}>LinkedIn</a>
             </div>
           </div>
         </footer>
