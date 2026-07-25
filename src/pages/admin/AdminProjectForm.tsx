@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import MarkdownEditor from '../../components/admin/MarkdownEditor';
+import AdminProjectFormSkeleton from '../../components/skeletons/AdminProjectFormSkeleton';
 
 interface ProjectFormData {
   slug: string;
@@ -150,10 +151,8 @@ export default function AdminProjectForm() {
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
-        <h2 className="font-headline-md text-headline-md text-on-surface animate-pulse">
-          Loading project data...
-        </h2>
+      <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+        <AdminProjectFormSkeleton />
       </div>
     );
   }

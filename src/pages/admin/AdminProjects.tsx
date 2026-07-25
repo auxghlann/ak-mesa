@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import AdminProjectRowSkeleton from '../../components/skeletons/AdminProjectRowSkeleton';
 
 type Project = {
   id: string;
@@ -89,10 +90,10 @@ export default function AdminProjects() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12">
-          <h2 className="font-headline-md text-headline-md text-on-surface animate-pulse">
-            Loading project list...
-          </h2>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <AdminProjectRowSkeleton key={i} />
+          ))}
         </div>
       ) : projects.length === 0 ? (
         <div className="bg-surface-container rounded-[24px] p-12 text-center border border-outline-variant/30">
