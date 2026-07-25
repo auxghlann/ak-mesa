@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import ProjectCardSkeleton from '../components/skeletons/ProjectCardSkeleton';
 
 type ProjectSummary = {
   slug: string;
@@ -46,8 +47,10 @@ export default function Projects() {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12">
-          <p className="font-body-lg text-body-lg animate-pulse text-on-surface-variant">Loading projects...</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+          {[1, 2, 3, 4].map((i) => (
+            <ProjectCardSkeleton key={i} />
+          ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">

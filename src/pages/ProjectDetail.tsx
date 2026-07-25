@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import ProjectDetailSkeleton from '../components/skeletons/ProjectDetailSkeleton';
 
 type Project = {
   id: string;
@@ -51,11 +52,7 @@ export default function ProjectDetail() {
   }, [id]);
 
   if (isLoading) {
-    return (
-      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
-        <h1 className="font-headline-xl text-headline-xl text-on-surface mb-4 animate-pulse">Loading project...</h1>
-      </div>
-    );
+    return <ProjectDetailSkeleton />;
   }
 
   if (!project) {
