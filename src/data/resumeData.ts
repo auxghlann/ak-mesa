@@ -76,12 +76,23 @@ export const educations: Education[] = [
 
 export const skills: SkillCategory[] = [
   {
-    category: "Tech Stack",
-    skills: ["Python", "FastAPI", "LangGraph", "SQLite", "PostgreSQL", "Docker", "Git/Github", "Codex", "Antigravity", "VS Code", "React", "TypeScript"]
+    category: "Programming Languages",
+    skills: ["Python", "Java", "SQL", "TypeScript"]
   },
   {
-    category: "AI Working Knowledge",
-    skills: ["Context Engineering", "RAG", "Agentic AI", "MCP fundamentals", "Agent Skills Integration", "Spec-Driven Development", "AI-assisted software development"]
+    category: "Tools & Framework",
+    skills: ["Docker", "Git/Github", "Codex", "Antigravity", "VS Code", "FastAPI", "React", "SpringBoot"]
+  },
+  {
+    category: "AI/ML",
+    skills: ["LangGraph", "LangChain", "Scikit-Learn", "Context Engineering", "RAG", "Agentic AI", "MCP",
+      "Agent Skills Integration", "Spec-Driven Development", "Machine Learning Algorithms"]
+  },
+  {
+    category: "Data Intelligence",
+    skills: ["PostgreSQL", "PySpark", "Databricks", "Power BI", "ETL/ELT", "Data Cleaning",
+      "Data Visualization & Analysis"
+    ]
   },
   {
     category: "Soft Skills",
@@ -164,7 +175,7 @@ export const certifications: Certification[] = [
 
 export const personalInfo = {
   name: "Allan Khester M. Mesa",
-  headline: "Aspiring AI Engineer & AI Automation Specialist",
+  headline: "Aspiring Data & AI Engineer",
   email: "khestermesa@gmail.com",
   phone: "09754486106",
   linkedin: "linkedin.com/in/ak-mesa",
