@@ -13,8 +13,8 @@ export default function NavBar() {
   return (
     <nav className="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30">
       <div className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
-        <Link to="/" className="font-headline-md text-headline-md font-extrabold text-on-surface">
-          AK<span className="text-primary">.</span>
+        <Link to="/" className="flex items-center" aria-label="Allan Khester Mesa - Home">
+          <img src="/logo.png" alt="Allan Khester Mesa" className="h-9 w-auto object-contain" />
         </Link>
         <div className="flex gap-gutter items-center">
           {navLinks.map((link) => {

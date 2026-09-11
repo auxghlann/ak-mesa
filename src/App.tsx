@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import { personalInfo } from './data/resumeData';
 import Home from './pages/Home';
@@ -55,7 +55,9 @@ function App() {
 
         <footer className="bg-surface-container-lowest border-t border-outline-variant w-full py-8 mt-12">
           <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto gap-base">
-            <span className="font-label-lg text-label-lg font-bold text-on-surface">AK.</span>
+            <Link to="/" className="flex items-center" aria-label="Allan Khester Mesa - Home">
+              <img src="/logo.png" alt="Allan Khester Mesa" className="h-8 w-auto object-contain" />
+            </Link>
             <span className="font-body-md text-body-md text-on-surface-variant text-center md:text-left">
               © {new Date().getFullYear()} Allan Khester M. Mesa. AI Engineer and AI Automation Specialist.
             </span>
