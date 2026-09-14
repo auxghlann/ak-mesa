@@ -1,11 +1,3 @@
-// TODO: Create tools for the agent
-
-/*
-- create tool for experiences
-- create tool for skills
-- create tool for education
-- create tool for projects
-*/
 import { z } from "zod";
 import { tool } from "@langchain/core/tools";
 import { personalInfo, experiences, skills, educations, certifications } from "../../../src/data/resumeData";
