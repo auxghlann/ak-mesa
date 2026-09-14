@@ -1,8 +1,10 @@
+'use client';
+
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 export function useAdminHotkey() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const pressCount = useRef(0);
   const lastPress = useRef(0);
 
@@ -26,11 +28,11 @@ export function useAdminHotkey() {
 
       if (pressCount.current >= 5) {
         pressCount.current = 0;
-        navigate('/admin/login');
+        router.push('/admin/login');
       }
     };
 
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [navigate]);
+  }, [router]);
 }

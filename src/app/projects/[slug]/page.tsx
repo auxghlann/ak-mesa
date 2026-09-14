@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import type { Metadata } from 'next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import ProjectDetailSkeleton from '../components/skeletons/ProjectDetailSkeleton';
+
+export const revalidate = 60;
 
 type Project = {
   id: string;
@@ -24,54 +26,72 @@ type Project = {
   };
 };
 
-export default function ProjectDetail() {
-  const { id } = useParams<{ id: string }>();
-  const [project, setProject] = useState<Project | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export async function generateStaticParams() {
+  const { data: projects } = await supabase
+    .from('projects')
+    .select('slug');
 
-  useEffect(() => {
-    async function fetchProject() {
-      setIsLoading(true);
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('slug', id)
-        .single();
+  if (!projects) return [];
+  return projects.map((p) => ({ slug: p.slug }));
+}
 
-      if (!error && data) {
-        setProject(data as Project);
-      } else if (error) {
-        console.error('Error fetching project:', error.message);
-      }
-      setIsLoading(false);
-    }
-
-    if (id) {
-      fetchProject();
-    }
-  }, [id]);
-
-  if (isLoading) {
-    return <ProjectDetailSkeleton />;
-  }
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { data: project } = await supabase
+    .from('projects')
+    .select('title, short_description, links')
+    .eq('slug', slug)
+    .maybeSingle();
 
   if (!project) {
-    return (
-      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap text-center">
-        <h1 className="font-headline-xl text-headline-xl text-on-surface mb-4">Project not found</h1>
-        <Link to="/projects" className="text-primary hover:underline font-label-lg text-label-lg">
-          &larr; Back to Projects
-        </Link>
-      </div>
-    );
+    return {
+      title: 'Project Not Found | Allan Khester Mesa',
+    };
   }
 
+  const images = project.links?.images || [];
+
+  return {
+    title: `${project.title} | Allan Khester Mesa`,
+    description: project.short_description,
+    openGraph: {
+      title: project.title,
+      description: project.short_description,
+      images: images.length > 0 ? [{ url: images[0] }] : undefined,
+    },
+  };
+}
+
+export default async function ProjectDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error || !data) {
+    notFound();
+  }
+
+  const project = data as Project;
   const { title, date, short_description, content, tech_stack, links } = project;
   const images = links?.images || [];
 
   return (
     <div className="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
-      <Link to="/projects" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-label-lg text-label-lg mb-8 transition-colors">
+      <Link
+        href="/projects"
+        className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-label-lg text-label-lg mb-8 transition-colors"
+      >
         <span className="material-symbols-rounded text-[20px]">arrow_back</span>
         Back to Projects
       </Link>
@@ -103,25 +123,45 @@ export default function ProjectDetail() {
         {links && (
           <div className="flex flex-wrap gap-4 border-b border-outline-variant/30 pb-8">
             {links.livePreview && (
-              <a href={links.livePreview} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm">
+              <a
+                href={links.livePreview}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm"
+              >
                 <span className="material-symbols-rounded text-[20px]">open_in_new</span>
                 Live Preview
               </a>
             )}
             {links.github && (
-              <a href={links.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 border border-outline text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container transition-colors">
+              <a
+                href={links.github}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 border border-outline text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container transition-colors"
+              >
                 <span className="material-symbols-rounded text-[20px]">code</span>
                 GitHub
               </a>
             )}
             {links.videoDemo && (
-              <a href={links.videoDemo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed-variant px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-secondary-container hover:text-white transition-colors">
+              <a
+                href={links.videoDemo}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed-variant px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-secondary-container hover:text-white transition-colors"
+              >
                 <span className="material-symbols-rounded text-[20px]">play_circle</span>
                 Video Demo
               </a>
             )}
             {links.article && (
-              <a href={links.article} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors">
+              <a
+                href={links.article}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 bg-surface-container-high text-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors"
+              >
                 <span className="material-symbols-rounded text-[20px]">article</span>
                 Featured Post
               </a>
@@ -133,7 +173,6 @@ export default function ProjectDetail() {
       {images.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
           {images.map((url: string, idx: number) => {
-            // Make the last image span 2 columns if there is an odd number of images
             const isLastOdd = idx === images.length - 1 && images.length % 2 !== 0;
             return (
               <img

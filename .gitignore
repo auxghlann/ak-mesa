@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.next
 *.local
 
 # Editor directories and files
@@ -38,5 +39,8 @@ scripts/
 
 # Workflow docs and agent rules
 spec/
+.spec/
 .agents/
+.docs/
 docs/
+.playwright-mcp/

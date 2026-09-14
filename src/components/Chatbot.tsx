@@ -1,4 +1,7 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import quokkaImg from '../assets/quokka.jpg';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -101,7 +104,7 @@ const Chatbot: React.FC = () => {
         {/* Header */}
         <div className="bg-primary text-on-primary p-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <img src={quokkaImg} alt="Quokka AI" className="w-8 h-8 rounded-full object-cover border-2 border-on-primary" />
+            <Image src={quokkaImg} alt="Quokka AI" width={32} height={32} className="w-8 h-8 rounded-full object-cover border-2 border-on-primary" />
             <span className="font-label-lg font-bold">Quokka</span>
           </div>
           <div className="flex items-center gap-2">
@@ -160,14 +163,14 @@ const Chatbot: React.FC = () => {
             <button
               type="button"
               onClick={() => handleSend("Tell me about Allan.")}
-              className="text-sm px-4 py-2 border border-primary/30 rounded-full text-primary hover:bg-primary/10 transition-colors shadow-sm cursor-pointer"
+              className="text-sm px-4 py-2 border border-primary/30 rounded-full text-primary hover:bg-primary/10 transition-colors shadow-sm cursor-pointer font-mono"
             >
               Tell me about Allan.
             </button>
             <button
               type="button"
               onClick={() => handleSend("What projects have Allan worked on?")}
-              className="text-sm px-4 py-2 border border-primary/30 rounded-full text-primary hover:bg-primary/10 transition-colors shadow-sm cursor-pointer"
+              className="text-sm px-4 py-2 border border-primary/30 rounded-full text-primary hover:bg-primary/10 transition-colors shadow-sm cursor-pointer font-mono"
             >
               What projects have Allan worked on?
             </button>
@@ -188,7 +191,7 @@ const Chatbot: React.FC = () => {
               }
             }}
             placeholder="Ask me anything..."
-            className="flex-1 bg-surface-container border border-outline-variant rounded-[20px] px-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none overflow-y-auto min-h-[40px] max-h-32"
+            className="flex-1 bg-surface-container border border-outline-variant rounded-[20px] px-4 py-2 text-sm text-on-surface font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none overflow-y-auto min-h-[40px] max-h-32"
             disabled={isLoading}
           />
           <button

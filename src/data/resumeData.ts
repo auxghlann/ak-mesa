@@ -102,6 +102,13 @@ export const skills: SkillCategory[] = [
 
 export const certifications: Certification[] = [
   {
+    id: "cert-gci",
+    name: "GCI World April 2026",
+    issuer: " Matsuo-Iwasawa Laboratory, The University of Tokyo",
+    date: "2026",
+    link: ""
+  },
+  {
     id: "cert-mcp",
     name: "MCP Fundamentals for Building AI Agents",
     issuer: "Educative",
@@ -174,10 +181,12 @@ export const certifications: Certification[] = [
 ];
 
 export const personalInfo = {
-  name: "Allan Khester M. Mesa",
+  name: "Allan Mesa",
+  career_level: "Fresh Graduate. Looking for Entry Level jobs",
   headline: "Aspiring Data & AI Engineer",
   email: "khestermesa@gmail.com",
   phone: "09754486106",
   linkedin: "linkedin.com/in/ak-mesa",
   github: "github.com/auxghlann",
+  website: "ak-mesa.vercel.app",
 };

@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../hooks/useAuth';
+'use client';
 
-export default function AdminLogin() {
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/useAuth';
+
+export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && user) {
-      navigate('/admin/projects', { replace: true });
+      router.replace('/admin/projects');
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ export default function AdminLogin() {
       if (error) {
         setErrorMsg(error.message);
       } else {
-        navigate('/admin/projects', { replace: true });
+        router.replace('/admin/projects');
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'An unexpected error occurred.');
@@ -48,7 +50,7 @@ export default function AdminLogin() {
             <span className="material-symbols-rounded text-2xl">admin_panel_settings</span>
           </div>
           <div>
-            <h1 className="font-headline-md text-headline-md text-on-surface font-bold">
+            <h1 className="font-headline-md text-headline-md text-on-surface">
               Admin Portal
             </h1>
             <p className="font-body-sm text-body-sm text-on-surface-variant">
@@ -95,7 +97,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-2 bg-primary text-on-primary font-label-lg text-label-lg py-3 px-6 rounded-full hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-sm font-semibold disabled:opacity-50"
+            className="w-full mt-2 bg-primary text-on-primary font-label-lg text-label-lg py-3 px-6 rounded-full hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 shadow-sm font-semibold disabled:opacity-50 cursor-pointer"
           >
             {isSubmitting ? (
               <>
