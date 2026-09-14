@@ -3,8 +3,8 @@ import { tool } from "@langchain/core/tools";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-    process.env.VITE_SUPABASE_URL || '',
-    process.env.VITE_SUPABASE_ANON_KEY || ''
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
 export const listProjects = tool(
@@ -39,7 +39,7 @@ export const getProjectDetails = tool(
             console.error(`Supabase query error for slug '${project_slug}':`, error);
             return `Error fetching project details for '${project_slug}': ${error.message}`;
         }
-        
+
         if (!data) {
             return `No project found matching the slug '${project_slug}'. Please check the slug and try again.`;
         }
