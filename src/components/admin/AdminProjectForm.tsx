@@ -1,8 +1,11 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import MarkdownEditor from '../../components/admin/MarkdownEditor';
-import AdminProjectFormSkeleton from '../../components/skeletons/AdminProjectFormSkeleton';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import MarkdownEditor from './MarkdownEditor';
+import AdminProjectFormSkeleton from '../skeletons/AdminProjectFormSkeleton';
 
 interface ProjectFormData {
   slug: string;
@@ -10,7 +13,7 @@ interface ProjectFormData {
   date: string;
   icon: string;
   short_description: string;
-  tech_stack: string; // Comma-separated input
+  tech_stack: string;
   livePreview: string;
   github: string;
   videoDemo: string;
@@ -18,10 +21,9 @@ interface ProjectFormData {
   content: string;
 }
 
-export default function AdminProjectForm() {
-  const { id } = useParams<{ id: string }>();
+export default function AdminProjectForm({ id }: { id?: string }) {
   const isEditing = Boolean(id);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [formData, setFormData] = useState<ProjectFormData>({
     slug: '',
@@ -84,7 +86,6 @@ export default function AdminProjectForm() {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const titleVal = e.target.value;
     setFormData((prev) => {
-      // Auto-generate slug from title if creating a new project and slug hasn't been manually edited heavily
       const autoSlug = titleVal
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
@@ -141,7 +142,7 @@ export default function AdminProjectForm() {
         if (error) throw error;
       }
 
-      navigate('/admin/projects');
+      router.push('/admin/projects');
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to save project. Ensure slug is unique.');
     } finally {
@@ -150,40 +151,25 @@ export default function AdminProjectForm() {
   };
 
   if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
-        <AdminProjectFormSkeleton />
-      </div>
-    );
+    return <AdminProjectFormSkeleton />;
   }
 
   return (
     <div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
-      <Link
-        to="/admin/projects"
-        className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-label-lg text-label-lg mb-6 transition-colors"
-      >
-        <span className="material-symbols-rounded text-[20px]">arrow_back</span>
-        Back to Project Dashboard
-      </Link>
+      <div className="mb-8">
+        <Link
+          href="/admin/projects"
+          className="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary font-label-md text-label-md mb-4 transition-colors"
+        >
+          <span className="material-symbols-rounded text-[18px]">arrow_back</span>
+          Back to CMS Dashboard
+        </Link>
+        <h1 className="font-headline-xl text-headline-xl text-on-surface">
+          {isEditing ? 'Edit Project Showcase' : 'Create New Showcase'}
+        </h1>
+      </div>
 
-      <div className="bg-surface-container rounded-[24px] p-6 md:p-8 border border-outline-variant/30 shadow-md">
-        <div className="flex items-center gap-3 mb-8 pb-4 border-b border-outline-variant/30">
-          <div className="w-12 h-12 bg-primary rounded-[16px] flex items-center justify-center text-on-primary shadow-sm">
-            <span className="material-symbols-rounded text-2xl">
-              {isEditing ? 'edit_note' : 'post_add'}
-            </span>
-          </div>
-          <div>
-            <h1 className="font-headline-md text-headline-md text-on-surface font-bold">
-              {isEditing ? 'Edit Project Showcase' : 'Create New Project Showcase'}
-            </h1>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">
-              Fill in the details below to update your portfolio
-            </p>
-          </div>
-        </div>
-
+      <div className="bg-surface-container rounded-[24px] p-8 border border-outline-variant/30">
         {errorMsg && (
           <div className="mb-6 p-4 rounded-xl bg-error-container text-on-error-container text-body-md font-medium border border-error/20">
             {errorMsg}
@@ -199,9 +185,10 @@ export default function AdminProjectForm() {
               <input
                 type="text"
                 required
+                name="title"
                 value={formData.title}
                 onChange={handleTitleChange}
-                placeholder="e.g. AI-Powered Workflow Automator"
+                placeholder="e.g. AI Portfolio Assistant"
                 className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
               />
             </div>
@@ -216,8 +203,8 @@ export default function AdminProjectForm() {
                 name="slug"
                 value={formData.slug}
                 onChange={handleChange}
-                placeholder="e.g. ai-workflow-automator"
-                className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors font-mono"
+                placeholder="e.g. ai-portfolio-assistant"
+                className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
               />
             </div>
           </div>
@@ -225,11 +212,10 @@ export default function AdminProjectForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-                Release / Creation Date *
+                Publication Date
               </label>
               <input
                 type="date"
-                required
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
@@ -239,18 +225,18 @@ export default function AdminProjectForm() {
 
             <div>
               <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-                Material Symbol Icon Name
+                Icon Name (Material Symbols)
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <input
                   type="text"
                   name="icon"
                   value={formData.icon}
                   onChange={handleChange}
-                  placeholder="e.g. code, smart_toy, psychology"
+                  placeholder="e.g. code, terminal, smart_toy"
                   className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
                 />
-                <div className="w-12 h-12 bg-surface border border-outline-variant rounded-xl flex items-center justify-center text-primary shrink-0">
+                <div className="w-12 h-12 bg-surface-container-high rounded-xl flex items-center justify-center text-primary shrink-0 border border-outline-variant">
                   <span className="material-symbols-rounded text-2xl">
                     {formData.icon || 'code'}
                   </span>
@@ -261,7 +247,7 @@ export default function AdminProjectForm() {
 
           <div>
             <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-              Short Description *
+              Short Description (Summary Card) *
             </label>
             <textarea
               required
@@ -269,33 +255,33 @@ export default function AdminProjectForm() {
               name="short_description"
               value={formData.short_description}
               onChange={handleChange}
-              placeholder="Brief summary displayed on project cards..."
-              className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
+              placeholder="Brief summary explaining what problem this project solves..."
+              className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors resize-y"
             />
           </div>
 
           <div>
             <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-              Tech Stack (Comma-separated)
+              Technology Stack (Comma separated)
             </label>
             <input
               type="text"
               name="tech_stack"
               value={formData.tech_stack}
               onChange={handleChange}
-              placeholder="e.g. React 19, TypeScript, Supabase, LangChain"
+              placeholder="React 19, TypeScript, Supabase, TailwindCSS"
               className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
             />
           </div>
 
-          <div className="border border-outline-variant/30 rounded-2xl p-4 bg-surface/50 space-y-4">
-            <h3 className="font-label-lg text-label-lg text-on-surface font-bold">
-              Project Links (Optional)
-            </h3>
+          <div className="pt-4 border-t border-outline-variant/30">
+            <h2 className="font-title-md text-title-md text-on-surface mb-4 font-semibold">
+              External & Showcase Links
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block font-label-sm text-label-sm text-on-surface-variant mb-1">
-                  Live Preview URL
+                  Live Demo Preview URL
                 </label>
                 <input
                   type="url"
@@ -364,7 +350,7 @@ export default function AdminProjectForm() {
 
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant/30">
             <Link
-              to="/admin/projects"
+              href="/admin/projects"
               className="border border-outline text-on-surface hover:bg-surface-container font-label-lg text-label-lg px-6 py-3 rounded-full transition-colors font-medium"
             >
               Cancel
@@ -372,7 +358,7 @@ export default function AdminProjectForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-primary text-on-primary font-label-lg text-label-lg px-8 py-3 rounded-full hover:bg-primary/90 transition-colors inline-flex items-center gap-2 shadow-sm font-semibold disabled:opacity-50"
+              className="bg-primary text-on-primary font-label-lg text-label-lg px-8 py-3 rounded-full hover:bg-primary/90 transition-colors inline-flex items-center gap-2 shadow-sm font-semibold disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? (
                 <>

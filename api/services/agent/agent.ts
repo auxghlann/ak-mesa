@@ -3,9 +3,8 @@ import { StateGraph, MessagesAnnotation, START, END } from "@langchain/langgraph
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { SystemMessage, RemoveMessage, AIMessage, ToolMessage } from "@langchain/core/messages";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { z } from "zod";
-import { getExperience, getPersonalInfo, getSkills, getEducation, getCertifications } from "./tools_portfolio.js"
-import { listProjects, getProjectDetails } from "./tools_database.js"
+import { getExperience, getPersonalInfo, getSkills, getEducation, getCertifications } from "./tools_portfolio";
+import { listProjects, getProjectDetails } from "./tools_database";
 
 export async function initializeAgent() {
 

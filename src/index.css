@@ -50,49 +50,54 @@
   --color-on-error: #ffffff;
   --color-tertiary-fixed: #ffdea0;
 
-  --font-headline-xl: "Manrope", sans-serif;
-  --font-headline-lg: "Manrope", sans-serif;
-  --font-headline-md: "Manrope", sans-serif;
-  --font-headline-lg-mobile: "Manrope", sans-serif;
-  --font-label-lg: "Hanken Grotesk", sans-serif;
-  --font-label-sm: "Hanken Grotesk", sans-serif;
-  --font-body-lg: "Hanken Grotesk", sans-serif;
-  --font-body-md: "Hanken Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
 
-  --text-headline-xl: 50px;
-  --text-headline-xl--line-height: 56px;
+  --font-headline-xl: "JetBrains Mono", monospace;
+  --font-headline-lg: "JetBrains Mono", monospace;
+  --font-headline-md: "JetBrains Mono", monospace;
+  --font-headline-lg-mobile: "JetBrains Mono", monospace;
+  --font-label-lg: "Inter", sans-serif;
+  --font-label-sm: "Inter", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+
+  --text-headline-xl: 46px;
+  --text-headline-xl--line-height: 54px;
   --text-headline-xl--letter-spacing: -0.02em;
-  --text-headline-xl--font-weight: 800;
+  --text-headline-xl--font-weight: 600;
 
   --text-label-lg: 16px;
   --text-label-lg--line-height: 22px;
-  --text-label-lg--letter-spacing: 0.1px;
-  --text-label-lg--font-weight: 600;
+  --text-label-lg--letter-spacing: 0;
+  --text-label-lg--font-weight: 500;
 
   --text-body-lg: 18px;
-  --text-body-lg--line-height: 25px;
+  --text-body-lg--line-height: 28px;
   --text-body-lg--font-weight: 400;
 
-  --text-headline-lg: 34px;
-  --text-headline-lg--line-height: 42px;
-  --text-headline-lg--letter-spacing: -0.01em;
-  --text-headline-lg--font-weight: 700;
+  --text-headline-lg: 30px;
+  --text-headline-lg--line-height: 38px;
+  --text-headline-lg--letter-spacing: -0.015em;
+  --text-headline-lg--font-weight: 500;
 
-  --text-headline-md: 24px;
-  --text-headline-md--line-height: 34px;
-  --text-headline-md--font-weight: 600;
+  --text-headline-md: 22px;
+  --text-headline-md--line-height: 30px;
+  --text-headline-md--letter-spacing: -0.01em;
+  --text-headline-md--font-weight: 500;
 
-  --text-body-md: 18px;
-  --text-body-md--line-height: 26px;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
   --text-body-md--font-weight: 400;
 
-  --text-headline-lg-mobile: 30px;
-  --text-headline-lg-mobile--line-height: 38px;
-  --text-headline-lg-mobile--font-weight: 700;
+  --text-headline-lg-mobile: 26px;
+  --text-headline-lg-mobile--line-height: 34px;
+  --text-headline-lg-mobile--letter-spacing: -0.015em;
+  --text-headline-lg-mobile--font-weight: 500;
 
-  --text-label-sm: 14px;
+  --text-label-sm: 13px;
   --text-label-sm--line-height: 18px;
-  --text-label-sm--letter-spacing: 0.5px;
+  --text-label-sm--letter-spacing: 0;
   --text-label-sm--font-weight: 500;
 
   --spacing-base: 8px;
@@ -105,6 +110,10 @@
 
 @layer base {
   body {
-    @apply bg-surface text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container;
+    @apply bg-surface text-on-surface font-sans antialiased selection:bg-primary-container selection:text-on-primary-container;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-mono;
   }
 }
