@@ -181,7 +181,7 @@ export const certifications: Certification[] = [
 ];
 
 export const personalInfo = {
-  name: "Allan Mesa",
+  name: "Khester Mesa",
   career_level: "Fresh Graduate. Looking for Entry Level jobs",
   headline: "Aspiring Data & AI Engineer",
   email: "khestermesa@gmail.com",
