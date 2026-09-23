@@ -11,7 +11,7 @@ export async function initializeAgent() {
     // 1. Model Initialization
     const model = new ChatGoogleGenerativeAI({
         apiKey: process.env.GOOGLE_API_KEY,
-        model: "gemini-3.1-flash-lite"
+        model: "gemini-3.5-flash-lite"
     });
 
     // 3. Define Graph Nodes

@@ -106,7 +106,7 @@ export const certifications: Certification[] = [
     name: "GCI World April 2026",
     issuer: " Matsuo-Iwasawa Laboratory, The University of Tokyo",
     date: "2026",
-    link: ""
+    link: "https://www.linkedin.com/in/ak-mesa/overlay/Certifications/1186979310/treasury/?profileId=ACoAADuF2dsB-_hteBQAGF_iC8BWH8rGlFqFjzQ"
   },
   {
     id: "cert-mcp",
