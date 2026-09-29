@@ -102,9 +102,16 @@ export const skills: SkillCategory[] = [
 
 export const certifications: Certification[] = [
   {
+    id: "cert-data-eng-sql",
+    name: "Associate Data Engineer in SQL",
+    issuer: "DataCamp",
+    date: "2026",
+    link: "https://www.datacamp.com/completed/statement-of-accomplishment/track/9d5313133f93d60042de6f6ba4123158b1338e49"
+  },
+  {
     id: "cert-gci",
     name: "GCI World April 2026",
-    issuer: " Matsuo-Iwasawa Laboratory, The University of Tokyo",
+    issuer: "Matsuo-Iwasawa Laboratory, The University of Tokyo",
     date: "2026",
     link: "https://www.linkedin.com/in/ak-mesa/overlay/Certifications/1186979310/treasury/?profileId=ACoAADuF2dsB-_hteBQAGF_iC8BWH8rGlFqFjzQ"
   },
