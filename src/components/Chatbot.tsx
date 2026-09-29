@@ -95,7 +95,7 @@ const Chatbot: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-50 flex flex-col items-end">
       <div
         className={`absolute bottom-full right-0 mb-4 transition-all duration-300 ease-out origin-bottom-right bg-surface rounded-[24px] shadow-lg border border-outline-variant flex flex-col overflow-hidden ${isOpen ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-[0.85] opacity-0 pointer-events-none'
           } ${isExpanded ? 'w-[calc(100vw-3rem)] sm:w-[700px] h-[80vh] max-h-[800px]' : 'w-[calc(100vw-3rem)] sm:w-96 h-[500px] max-h-[80vh]'
@@ -130,7 +130,7 @@ const Chatbot: React.FC = () => {
                 {msg.role === 'user' ? (
                   <p className="font-body-md text-sm whitespace-pre-wrap">{msg.content}</p>
                 ) : (
-                  <div className="font-body-md text-sm prose prose-sm max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+                  <div className="font-body-md text-sm prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-on-surface prose-a:underline hover:prose-a:opacity-80 prose-code:font-mono prose-code:bg-surface-container prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {msg.content}
                     </ReactMarkdown>
