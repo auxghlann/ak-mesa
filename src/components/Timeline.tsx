@@ -31,7 +31,7 @@ export function TimelineItem({ title, subtitle, date, children, isLast = false }
 
 export function Timeline({ children }: { children: ReactNode }) {
   return (
-    <div className="relative pl-6 border-l-2 border-surface-variant ml-6">
+    <div className="relative pl-6 border-l-2 border-outline-variant/60 ml-6">
       {children}
     </div>
   );

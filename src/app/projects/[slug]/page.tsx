@@ -149,7 +149,7 @@ export default async function ProjectDetailPage({
                 href={links.videoDemo}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed-variant px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-secondary-container hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed-variant px-6 py-3 rounded-full font-label-lg text-label-lg hover:bg-secondary-container hover:text-on-secondary-container transition-colors"
               >
                 <span className="material-symbols-rounded text-[20px]">play_circle</span>
                 Video Demo
@@ -186,7 +186,7 @@ export default async function ProjectDetailPage({
         </div>
       )}
 
-      <div className="prose prose-lg max-w-none text-on-surface-variant prose-headings:font-headline-md prose-headings:text-on-surface prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+      <div className="prose prose-lg dark:prose-invert max-w-none text-on-surface-variant prose-headings:font-headline-md prose-headings:text-on-surface prose-a:text-on-surface prose-a:underline hover:prose-a:opacity-80 prose-code:font-mono prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none prose-pre:bg-surface-container prose-pre:border prose-pre:border-outline-variant">
         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
           {content}
         </ReactMarkdown>
