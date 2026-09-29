@@ -44,3 +44,7 @@ spec/
 .docs/
 docs/
 .playwright-mcp/
+
+
+AGENTS.md 
+CLAUDE.md
