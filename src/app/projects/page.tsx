@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'A collection of software engineering projects, AI applications, and case studies by Allan Khester Mesa.',
 };
 
-export const revalidate = 60;
+import { cacheLife, cacheTag } from 'next/cache';
 
 type ProjectSummary = {
   slug: string;
@@ -16,19 +16,29 @@ type ProjectSummary = {
   icon: string;
   short_description: string;
   tech_stack: string[];
+  is_pinned?: boolean;
 };
 
-export default async function ProjectsPage() {
+async function getProjects() {
+  'use cache';
+  cacheLife('hours');
+  cacheTag('projects');
+
   const { data, error } = await supabase
     .from('projects')
-    .select('slug, title, date, icon, short_description, tech_stack')
+    .select('slug, title, date, icon, short_description, tech_stack, is_pinned')
+    .order('is_pinned', { ascending: false })
     .order('date', { ascending: false });
 
   if (error) {
     console.error('Error fetching projects:', error.message);
+    return [];
   }
+  return (data as ProjectSummary[]) || [];
+}
 
-  const projects = (data as ProjectSummary[]) || [];
+export default async function ProjectsPage() {
+  const projects = await getProjects();
 
   return (
     <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
@@ -51,9 +61,11 @@ export default async function ProjectsPage() {
                     {project.icon || 'dashboard'}
                   </span>
                 </div>
-                <span className="font-label-sm text-label-sm text-on-surface-variant">
-                  {new Date(project.date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
-                </span>
+                <div className="flex items-center gap-2.5">
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">
+                    {new Date(project.date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
+                </div>
               </div>
 
               <h2 className="font-headline-md text-headline-md mb-4 text-[24px] leading-tight text-on-surface">{project.title}</h2>

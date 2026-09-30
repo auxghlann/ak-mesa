@@ -15,6 +15,7 @@ type Project = {
   icon: string;
   short_description: string;
   tech_stack: string[];
+  is_pinned?: boolean;
 };
 
 export default function AdminProjectsPage() {
@@ -27,13 +28,14 @@ export default function AdminProjectsPage() {
     setIsLoading(true);
     const { data, error } = await supabase
       .from('projects')
-      .select('id, slug, title, date, icon, short_description, tech_stack')
+      .select('*')
+      .order('is_pinned', { ascending: false })
       .order('date', { ascending: false });
 
     if (error) {
       console.error('Error fetching projects:', error.message);
     } else {
-      setProjects(data as Project[]);
+      setProjects((data as Project[]) || []);
     }
     setIsLoading(false);
   };
@@ -41,6 +43,18 @@ export default function AdminProjectsPage() {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  const handleTogglePin = async (id: string, currentPinned: boolean) => {
+    const newPinned = !currentPinned;
+    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, is_pinned: newPinned } : p)));
+    const { error } = await supabase.from('projects').update({ is_pinned: newPinned }).eq('id', id);
+    if (error) {
+      console.error('Failed to update pinned status in DB:', error.message);
+      // Revert if DB fails (e.g. column not yet created in Supabase)
+      setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, is_pinned: currentPinned } : p)));
+      alert(`Could not save pin to database: ${error.message}\nMake sure to run scripts/003_add_pinned_to_projects.sql in Supabase SQL editor.`);
+    }
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -140,6 +154,21 @@ export default function AdminProjectsPage() {
                       <span className="bg-surface-container-high font-label-sm text-label-sm px-2.5 py-0.5 rounded-full text-on-surface-variant">
                         /{project.slug}
                       </span>
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePin(project.id, Boolean(project.is_pinned))}
+                        title={project.is_pinned ? "Click to unpin" : "Click to pin"}
+                        className={`inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border transition-colors cursor-pointer ${
+                          project.is_pinned
+                            ? 'bg-primary text-on-primary border-primary font-bold shadow-xs'
+                            : 'bg-surface-container text-on-surface-variant border-outline-variant hover:text-on-surface hover:border-outline'
+                        }`}
+                      >
+                        <span className="material-symbols-rounded text-[13px]">
+                          {project.is_pinned ? 'push_pin' : 'keep'}
+                        </span>
+                        <span>{project.is_pinned ? 'Pinned' : 'Pin'}</span>
+                      </button>
                     </div>
                     <p className="font-body-md text-body-md text-on-surface-variant line-clamp-1 mb-2">
                       {project.short_description}
