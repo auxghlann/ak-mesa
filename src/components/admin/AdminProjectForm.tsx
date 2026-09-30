@@ -19,6 +19,7 @@ interface ProjectFormData {
   videoDemo: string;
   article: string;
   content: string;
+  is_pinned: boolean;
 }
 
 export default function AdminProjectForm({ id }: { id?: string }) {
@@ -37,6 +38,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
     videoDemo: '',
     article: '',
     content: '',
+    is_pinned: false,
   });
 
   const [isLoading, setIsLoading] = useState(isEditing);
@@ -68,6 +70,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
             videoDemo: data.links?.videoDemo || '',
             article: data.links?.article || '',
             content: data.content || '',
+            is_pinned: Boolean(data.is_pinned),
           });
         }
         setIsLoading(false);
@@ -102,7 +105,6 @@ export default function AdminProjectForm({ id }: { id?: string }) {
     e.preventDefault();
     setErrorMsg(null);
     setIsSubmitting(true);
-
     try {
       const techStackArray = formData.tech_stack
         .split(',')
@@ -125,6 +127,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
         tech_stack: techStackArray,
         links: linksObj,
         content: formData.content,
+        is_pinned: formData.is_pinned,
       };
 
       if (isEditing && id) {
@@ -243,6 +246,26 @@ export default function AdminProjectForm({ id }: { id?: string }) {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Pin Project Toggle */}
+          <div className="flex items-center gap-3 p-4 bg-surface rounded-xl border border-outline-variant">
+            <input
+              type="checkbox"
+              id="is_pinned"
+              name="is_pinned"
+              checked={formData.is_pinned}
+              onChange={(e) => setFormData((prev) => ({ ...prev, is_pinned: e.target.checked }))}
+              className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer"
+            />
+            <label htmlFor="is_pinned" className="cursor-pointer select-none">
+              <span className="block font-mono text-xs font-semibold text-on-surface">
+                Pin Project (Featured Highlight)
+              </span>
+              <span className="block text-[11px] text-on-surface-variant font-sans">
+                Display this project on the Home page highlights and prioritize it at the top of the projects list.
+              </span>
+            </label>
           </div>
 
           <div>

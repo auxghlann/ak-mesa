@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import '../index.css';
+import { Suspense } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Chatbot from '@/components/Chatbot';
 import { personalInfo } from '@/data/resumeData';
@@ -32,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable} scroll-smooth`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -46,7 +47,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col md:flex-row relative font-sans bg-surface text-on-surface antialiased transition-colors duration-200">
         <ThemeProvider>
-          <Sidebar />
+          <Suspense fallback={null}>
+            <Sidebar />
+          </Suspense>
           <div className="flex flex-col flex-grow w-full pb-20 md:pb-0 min-w-0">
             <main className="flex-grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop relative">
               {children}

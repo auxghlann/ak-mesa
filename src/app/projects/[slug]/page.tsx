@@ -5,8 +5,7 @@ import type { Metadata } from 'next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-
-export const revalidate = 60;
+import { cacheLife, cacheTag } from 'next/cache';
 
 type Project = {
   id: string;
@@ -26,6 +25,21 @@ type Project = {
   };
 };
 
+async function getProject(slug: string): Promise<Project | null> {
+  'use cache';
+  cacheLife('hours');
+  cacheTag('projects', `project-${slug}`);
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return data as Project;
+}
+
 export async function generateStaticParams() {
   const { data: projects } = await supabase
     .from('projects')
@@ -41,11 +55,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { data: project } = await supabase
-    .from('projects')
-    .select('title, short_description, links')
-    .eq('slug', slug)
-    .maybeSingle();
+  const project = await getProject(slug);
 
   if (!project) {
     return {
@@ -72,17 +82,12 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('slug', slug)
-    .maybeSingle();
+  const project = await getProject(slug);
 
-  if (error || !data) {
+  if (!project) {
     notFound();
   }
 
-  const project = data as Project;
   const { title, date, short_description, content, tech_stack, links } = project;
   const images = links?.images || [];
 

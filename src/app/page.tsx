@@ -1,26 +1,52 @@
-import { experiences, educations, skills, personalInfo, certifications } from '@/data/resumeData';
-import { Timeline, TimelineItem } from '@/components/Timeline';
-import Chip from '@/components/Chip';
 import Image from 'next/image';
 import profilePic from '@/assets/profile.jpg';
+import { supabase } from '@/lib/supabase';
+import { experiences, educations, skills, personalInfo, certifications } from '@/data/resumeData';
+import ProjectsSection from '@/components/ProjectsSection';
+import ExperienceSection from '@/components/ExperienceSection';
+import EducationSection from '@/components/EducationSection';
+import CertificationsSection from '@/components/CertificationsSection';
+import SkillsSection from '@/components/SkillsSection';
 
-export default function HomePage() {
+import { cacheLife, cacheTag } from 'next/cache';
+
+async function getPinnedProjects() {
+  'use cache';
+  cacheLife('hours');
+  cacheTag('projects');
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('slug, title, date, icon, short_description, tech_stack')
+    .eq('is_pinned', true)
+    .order('date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching pinned projects:', error.message);
+    return [];
+  }
+  return data || [];
+}
+
+export default async function HomePage() {
+  const pinnedProjects = await getPinnedProjects();
+
   return (
-    <>
-      {/* Hero Section - Full First Viewport */}
-      <section className="min-h-screen flex flex-col justify-center py-12 md:py-16" id="home">
+    <div className="flex flex-col gap-20 py-12 md:py-16 max-w-4xl mx-auto">
+      {/* Hero Section */}
+      <section className="min-h-[calc(100vh-6rem)] flex flex-col justify-center" id="home">
         <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14">
           <div className="shrink-0">
             <Image
               src={profilePic}
               alt={personalInfo.name}
-              className="w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-[24px] object-cover shadow-md border-2 border-outline-variant/30"
+              className="w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-[24px] object-cover shadow-md border-2 border-outline-variant"
               priority
             />
           </div>
           <div className="flex-1 text-center md:text-left">
             <h1 className="font-headline-xl text-headline-xl mb-3">
-              Hi, I'm {personalInfo.name}<span className="text-primary">.</span>
+              {personalInfo.name}<span className="text-primary"></span>
             </h1>
             <h2 className="font-headline-md text-headline-md text-on-surface-variant mb-5 font-normal">
               {personalInfo.headline}
@@ -37,7 +63,7 @@ export default function HomePage() {
                 <span>{personalInfo.email}</span>
               </a>
 
-              <span className="text-outline-variant/60 select-none hidden sm:inline">|</span>
+              <span className="text-outline-variant select-none hidden sm:inline">|</span>
 
               <a
                 href={`https://${personalInfo.github}`}
@@ -51,7 +77,7 @@ export default function HomePage() {
                 <span>{personalInfo.github}</span>
               </a>
 
-              <span className="text-outline-variant/60 select-none hidden sm:inline">|</span>
+              <span className="text-outline-variant select-none hidden sm:inline">|</span>
 
               <a
                 href={`https://${personalInfo.linkedin}`}
@@ -69,133 +95,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter py-section-gap">
-        {/* Left Column: Experience & Education */}
-        <div className="md:col-span-7 flex flex-col gap-16">
-          <section>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-11 h-11 rounded-2xl bg-surface-container-high border border-outline-variant/60 flex items-center justify-center text-on-surface shadow-xs">
-                <span className="material-symbols-rounded text-[22px]">work</span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg">Experience</h2>
-            </div>
-            <Timeline>
-              {experiences.map((exp, index) => (
-                <TimelineItem
-                  key={exp.id}
-                  title={exp.title}
-                  subtitle={exp.company}
-                  date={exp.date}
-                  isLast={index === experiences.length - 1}
-                >
-                  <ul className="list-disc pl-5">
-                    {exp.description.map((desc, i) => (
-                      <li key={i}>{desc}</li>
-                    ))}
-                  </ul>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </section>
+      {/* Featured Projects Section */}
+      <ProjectsSection projects={pinnedProjects} />
 
-          <section>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-11 h-11 rounded-2xl bg-surface-container-high border border-outline-variant/60 flex items-center justify-center text-on-surface shadow-xs">
-                <span className="material-symbols-rounded text-[22px]">school</span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg">Education</h2>
-            </div>
-            <Timeline>
-              {educations.map((edu, index) => (
-                <TimelineItem
-                  key={edu.id}
-                  title={edu.degree}
-                  subtitle={edu.institution}
-                  date={edu.date}
-                  isLast={index === educations.length - 1}
-                >
-                  <p className="font-medium text-on-surface-variant">{edu.honors}</p>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </section>
-        </div>
+      {/* Experience Section */}
+      <ExperienceSection experiences={experiences} />
 
-        {/* Right Column: Skills & Certifications */}
-        <div className="md:col-span-5 flex flex-col gap-16">
-          <section>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-11 h-11 rounded-2xl bg-surface-container-high border border-outline-variant/60 flex items-center justify-center text-on-surface shadow-xs">
-                <span className="material-symbols-rounded text-[22px] fill-current">bolt</span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg">Skills Matrix</h2>
-            </div>
-            <div className="space-y-8">
-              {skills.map((skillGroup, idx) => {
-                const colorMap = ['default', 'blue', 'green'] as const;
-                const chipColor = colorMap[idx % colorMap.length];
+      {/* Education Section */}
+      <EducationSection educations={educations} />
 
-                return (
-                  <div key={skillGroup.category}>
-                    <h3 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-4">
-                      {skillGroup.category}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {skillGroup.skills.map((skill) => (
-                        <Chip key={skill} color={chipColor}>
-                          {skill}
-                        </Chip>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+      {/* Certifications Section */}
+      <CertificationsSection certifications={certifications} />
 
-          <section>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-11 h-11 rounded-2xl bg-surface-container-high border border-outline-variant/60 flex items-center justify-center text-on-surface shadow-xs">
-                <span className="material-symbols-rounded text-[22px]">workspace_premium</span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg">Certifications</h2>
-            </div>
-            <ul className="flex flex-col gap-4">
-              {certifications.map((cert) => {
-                const CardContent = (
-                  <div className="bg-surface-container-lowest border border-outline-variant/50 rounded-[24px] p-6 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <h3 className="font-headline-md text-[18px] leading-tight mb-2 text-on-surface">{cert.name}</h3>
-                        <p className="font-body-sm text-on-surface-variant">
-                          {cert.issuer} {cert.date && `• ${cert.date}`}
-                        </p>
-                      </div>
-                      {cert.link && (
-                        <span className="material-symbols-rounded text-outline hover:text-primary transition-colors">
-                          open_in_new
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                );
-
-                return (
-                  <li key={cert.id} className="group">
-                    {cert.link ? (
-                      <a href={cert.link} target="_blank" rel="noreferrer" className="block outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-[24px]">
-                        {CardContent}
-                      </a>
-                    ) : (
-                      CardContent
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        </div>
-      </div>
-    </>
+      {/* Skills Section */}
+      <SkillsSection skills={skills} />
+    </div>
   );
 }

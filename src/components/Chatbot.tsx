@@ -26,7 +26,7 @@ const Chatbot: React.FC = () => {
       setHasInitialized(true);
       setIsLoading(true);
       setTimeout(() => {
-        setMessages([{ role: 'bot', content: 'Hi there! I am Quokka, Allan\'s AI assistant. Ask me anything about this table!' }]);
+        setMessages([{ role: 'bot', content: "Hi there! I am Quokka, Allan's AI assistant. Ask me anything about Allan or his projects!" }]);
         setIsLoading(false);
       }, 1000);
     }
@@ -39,13 +39,15 @@ const Chatbot: React.FC = () => {
     }
   }, [input]);
 
-  const [threadId] = useState(() => {
+  const [threadId, setThreadId] = useState('');
+
+  useEffect(() => {
     try {
-      return crypto.randomUUID();
+      setThreadId(crypto.randomUUID());
     } catch {
-      return '00000000-0000-0000-0000-000000000000'; // Fallback if not secure context
+      setThreadId('00000000-0000-0000-0000-000000000000');
     }
-  });
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -102,17 +104,27 @@ const Chatbot: React.FC = () => {
           }`}
       >
         {/* Header */}
-        <div className="bg-primary text-on-primary p-4 flex justify-between items-center">
+        <div className="bg-surface text-on-surface border-b border-outline-variant p-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Image src={quokkaImg} alt="Quokka AI" width={32} height={32} className="w-8 h-8 rounded-full object-cover border-2 border-on-primary" />
-            <span className="font-label-lg font-bold">Quokka</span>
+            <Image src={quokkaImg} alt="Quokka AI" width={32} height={32} className="w-8 h-8 rounded-full object-cover border border-outline-variant" />
+            <span className="font-label-lg font-bold text-on-surface">Quokka</span>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={toggleExpand} className="hidden sm:flex text-on-primary hover:text-on-primary/80 transition-colors cursor-pointer items-center justify-center">
-              <span className="material-symbols-rounded">{isExpanded ? 'close_fullscreen' : 'open_in_full'}</span>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={toggleExpand}
+              className="hidden sm:flex text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high p-1 rounded-lg transition-colors cursor-pointer items-center justify-center"
+              aria-label={isExpanded ? 'Minimize chat' : 'Expand chat'}
+            >
+              <span className="material-symbols-rounded text-[20px]">{isExpanded ? 'close_fullscreen' : 'open_in_full'}</span>
             </button>
-            <button onClick={toggleChat} className="text-on-primary hover:text-on-primary/80 transition-colors cursor-pointer items-center justify-center">
-              <span className="material-symbols-rounded">close</span>
+            <button
+              type="button"
+              onClick={toggleChat}
+              className="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high p-1 rounded-lg transition-colors cursor-pointer items-center justify-center"
+              aria-label="Close chat"
+            >
+              <span className="material-symbols-rounded text-[20px]">close</span>
             </button>
           </div>
         </div>
@@ -124,13 +136,13 @@ const Chatbot: React.FC = () => {
               <div
                 className={`p-3 rounded-[20px] overflow-hidden ${msg.role === 'user'
                   ? 'bg-primary text-on-primary rounded-br-sm'
-                  : 'bg-surface-container-high text-on-surface rounded-bl-sm'
+                  : 'bg-surface-container-high border border-outline-variant/40 text-on-surface rounded-bl-sm'
                   }`}
               >
                 {msg.role === 'user' ? (
                   <p className="font-body-md text-sm whitespace-pre-wrap">{msg.content}</p>
                 ) : (
-                  <div className="font-body-md text-sm prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-a:text-on-surface prose-a:underline hover:prose-a:opacity-80 prose-code:font-mono prose-code:bg-surface-container prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none">
+                  <div className="font-body-md text-sm prose prose-sm dark:prose-invert max-w-none text-on-surface prose-p:text-on-surface prose-p:my-1 prose-headings:text-on-surface prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:text-on-surface prose-li:my-0 prose-strong:text-on-surface prose-strong:font-bold prose-a:text-primary prose-a:font-semibold prose-a:underline hover:prose-a:opacity-80 prose-code:font-mono prose-code:text-on-surface prose-code:bg-surface-container-highest prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {msg.content}
                     </ReactMarkdown>
@@ -144,7 +156,7 @@ const Chatbot: React.FC = () => {
           ))}
           {isLoading && (
             <div className="flex flex-col gap-1 items-start self-start max-w-[90%]">
-              <div className="bg-surface-container-high text-on-surface rounded-[20px] rounded-bl-sm p-3 flex items-center">
+              <div className="bg-surface-container-high border border-outline-variant/40 text-on-surface rounded-[20px] rounded-bl-sm p-3 flex items-center">
                 <div className="flex gap-1 items-center h-5">
                   <div className="w-2 h-2 bg-on-surface-variant rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                   <div className="w-2 h-2 bg-on-surface-variant rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -163,14 +175,14 @@ const Chatbot: React.FC = () => {
             <button
               type="button"
               onClick={() => handleSend("Tell me about Allan.")}
-              className="text-sm px-4 py-2 border border-primary/30 rounded-full text-primary hover:bg-primary/10 transition-colors shadow-sm cursor-pointer font-mono"
+              className="text-xs sm:text-sm px-3.5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface hover:text-primary transition-colors shadow-xs cursor-pointer font-mono"
             >
               Tell me about Allan.
             </button>
             <button
               type="button"
               onClick={() => handleSend("What projects have Allan worked on?")}
-              className="text-sm px-4 py-2 border border-primary/30 rounded-full text-primary hover:bg-primary/10 transition-colors shadow-sm cursor-pointer font-mono"
+              className="text-xs sm:text-sm px-3.5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface hover:text-primary transition-colors shadow-xs cursor-pointer font-mono"
             >
               What projects have Allan worked on?
             </button>
@@ -191,7 +203,7 @@ const Chatbot: React.FC = () => {
               }
             }}
             placeholder="Ask me anything..."
-            className="flex-1 bg-surface-container border border-outline-variant rounded-[20px] px-4 py-2 text-sm text-on-surface font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none overflow-y-auto min-h-[40px] max-h-32"
+            className="flex-1 bg-surface-container border border-outline-variant rounded-[20px] px-4 py-2 text-sm text-on-surface placeholder:text-on-surface-variant font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none overflow-y-auto min-h-[40px] max-h-32"
             disabled={isLoading}
           />
           <button
