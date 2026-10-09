@@ -6,12 +6,15 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import MarkdownEditor from './MarkdownEditor';
 import AdminProjectFormSkeleton from '../skeletons/AdminProjectFormSkeleton';
+import { revalidateProjectsCache } from '@/app/actions/projects';
 
 interface ProjectFormData {
   slug: string;
   title: string;
   date: string;
   icon: string;
+  app_icon_url: string;
+  tags: string;
   short_description: string;
   tech_stack: string;
   livePreview: string;
@@ -20,6 +23,7 @@ interface ProjectFormData {
   article: string;
   content: string;
   is_pinned: boolean;
+  is_visible: boolean;
 }
 
 export default function AdminProjectForm({ id }: { id?: string }) {
@@ -31,6 +35,8 @@ export default function AdminProjectForm({ id }: { id?: string }) {
     title: '',
     date: new Date().toISOString().split('T')[0],
     icon: 'code',
+    app_icon_url: '',
+    tags: '',
     short_description: '',
     tech_stack: '',
     livePreview: '',
@@ -39,10 +45,12 @@ export default function AdminProjectForm({ id }: { id?: string }) {
     article: '',
     content: '',
     is_pinned: false,
+    is_visible: true,
   });
 
   const [isLoading, setIsLoading] = useState(isEditing);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploadingIcon, setIsUploadingIcon] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
@@ -63,6 +71,8 @@ export default function AdminProjectForm({ id }: { id?: string }) {
             title: data.title || '',
             date: data.date ? new Date(data.date).toISOString().split('T')[0] : '',
             icon: data.icon || 'code',
+            app_icon_url: data.app_icon_url || '',
+            tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
             short_description: data.short_description || '',
             tech_stack: Array.isArray(data.tech_stack) ? data.tech_stack.join(', ') : '',
             livePreview: data.links?.livePreview || '',
@@ -71,6 +81,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
             article: data.links?.article || '',
             content: data.content || '',
             is_pinned: Boolean(data.is_pinned),
+            is_visible: data.is_visible !== false,
           });
         }
         setIsLoading(false);
@@ -101,12 +112,50 @@ export default function AdminProjectForm({ id }: { id?: string }) {
     });
   };
 
+  const handleIconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingIcon(true);
+    try {
+      const fileExt = file.name.split('.').pop() || 'png';
+      const cleanSlug = formData.slug || 'project';
+      const fileName = `icon-${cleanSlug}-${Date.now()}.${fileExt}`;
+      const filePath = `icons/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('portfolio-assets')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from('portfolio-assets')
+        .getPublicUrl(filePath);
+
+      setFormData((prev) => ({ ...prev, app_icon_url: publicUrlData.publicUrl }));
+    } catch (err: any) {
+      alert(`Failed to upload icon: ${err.message}`);
+    } finally {
+      setIsUploadingIcon(false);
+    }
+  };
+
+  const handleRemoveIcon = () => {
+    setFormData((prev) => ({ ...prev, app_icon_url: '' }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
     setIsSubmitting(true);
     try {
       const techStackArray = formData.tech_stack
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      const tagsArray = formData.tags
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean);
@@ -123,11 +172,14 @@ export default function AdminProjectForm({ id }: { id?: string }) {
         title: formData.title.trim(),
         date: formData.date || null,
         icon: formData.icon.trim() || 'code',
+        app_icon_url: formData.app_icon_url.trim() || null,
+        tags: tagsArray,
         short_description: formData.short_description.trim(),
         tech_stack: techStackArray,
         links: linksObj,
         content: formData.content,
         is_pinned: formData.is_pinned,
+        is_visible: formData.is_visible,
       };
 
       if (isEditing && id) {
@@ -145,6 +197,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
         if (error) throw error;
       }
 
+      await revalidateProjectsCache();
       router.push('/admin/projects');
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to save project. Ensure slug is unique.');
@@ -228,7 +281,53 @@ export default function AdminProjectForm({ id }: { id?: string }) {
 
             <div>
               <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-                Icon Name (Material Symbols)
+                App Icon (Image Upload - Optional)
+              </label>
+              <div className="flex items-center gap-3">
+                <label className="bg-surface-container border border-outline-variant hover:border-outline rounded-xl px-4 py-2.5 text-xs font-mono text-on-surface cursor-pointer transition-colors inline-flex items-center gap-2">
+                  <span className="material-symbols-rounded text-[18px]">
+                    {isUploadingIcon ? 'progress_activity' : 'upload_file'}
+                  </span>
+                  <span>{isUploadingIcon ? 'Uploading...' : 'Choose Icon'}</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleIconUpload}
+                    disabled={isUploadingIcon}
+                    className="hidden"
+                  />
+                </label>
+
+                {formData.app_icon_url ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-12 h-12 rounded-xl border border-outline-variant overflow-hidden bg-surface-container shrink-0">
+                      <img
+                        src={formData.app_icon_url}
+                        alt="Uploaded app icon"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveIcon}
+                      className="text-error hover:underline font-mono text-xs cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <span className="text-on-surface-variant text-xs font-sans">
+                    No custom icon (uses fallback)
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
+                Fallback Material Symbol Icon
               </label>
               <div className="flex items-center gap-3">
                 <input
@@ -246,26 +345,47 @@ export default function AdminProjectForm({ id }: { id?: string }) {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Pin Project Toggle */}
-          <div className="flex items-center gap-3 p-4 bg-surface rounded-xl border border-outline-variant">
-            <input
-              type="checkbox"
-              id="is_pinned"
-              name="is_pinned"
-              checked={formData.is_pinned}
-              onChange={(e) => setFormData((prev) => ({ ...prev, is_pinned: e.target.checked }))}
-              className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer"
-            />
-            <label htmlFor="is_pinned" className="cursor-pointer select-none">
-              <span className="block font-mono text-xs font-semibold text-on-surface">
-                Pin Project (Featured Highlight)
-              </span>
-              <span className="block text-[11px] text-on-surface-variant font-sans">
-                Display this project on the Home page highlights and prioritize it at the top of the projects list.
-              </span>
-            </label>
+            {/* Visibility & Pin Project Toggles */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 p-4 bg-surface rounded-xl border border-outline-variant">
+                <input
+                  type="checkbox"
+                  id="is_visible"
+                  name="is_visible"
+                  checked={formData.is_visible}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, is_visible: e.target.checked }))}
+                  className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer"
+                />
+                <label htmlFor="is_visible" className="cursor-pointer select-none">
+                  <span className="block font-mono text-xs font-semibold text-on-surface">
+                    Publicly Visible
+                  </span>
+                  <span className="block text-[11px] text-on-surface-variant font-sans">
+                    Show this project on your portfolio and public catalog. Uncheck to hide.
+                  </span>
+                </label>
+              </div>
+
+              <div className="flex items-center gap-3 p-4 bg-surface rounded-xl border border-outline-variant">
+                <input
+                  type="checkbox"
+                  id="is_pinned"
+                  name="is_pinned"
+                  checked={formData.is_pinned}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, is_pinned: e.target.checked }))}
+                  className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer"
+                />
+                <label htmlFor="is_pinned" className="cursor-pointer select-none">
+                  <span className="block font-mono text-xs font-semibold text-on-surface">
+                    Pin Project (Featured Highlight)
+                  </span>
+                  <span className="block text-[11px] text-on-surface-variant font-sans">
+                    Display this project on Home highlights and prioritize at the top of the list.
+                  </span>
+                </label>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -283,18 +403,40 @@ export default function AdminProjectForm({ id }: { id?: string }) {
             />
           </div>
 
-          <div>
-            <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-              Technology Stack (Comma separated)
-            </label>
-            <input
-              type="text"
-              name="tech_stack"
-              value={formData.tech_stack}
-              onChange={handleChange}
-              placeholder="React 19, TypeScript, Supabase, TailwindCSS"
-              className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
+                Category Tags (Comma separated)
+              </label>
+              <input
+                type="text"
+                name="tags"
+                value={formData.tags}
+                onChange={handleChange}
+                placeholder="AI & Agents, Data Engineering, Web Apps"
+                className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
+              />
+              <span className="text-[11px] text-on-surface-variant font-sans mt-1 block">
+                Tags for category filtering on the public /projects catalog.
+              </span>
+            </div>
+
+            <div>
+              <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
+                Technology Stack (Comma separated)
+              </label>
+              <input
+                type="text"
+                name="tech_stack"
+                value={formData.tech_stack}
+                onChange={handleChange}
+                placeholder="React 19, TypeScript, Supabase, TailwindCSS"
+                className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors"
+              />
+              <span className="text-[11px] text-on-surface-variant font-sans mt-1 block">
+                Libraries and technologies displayed on the project card.
+              </span>
+            </div>
           </div>
 
           <div className="pt-4 border-t border-outline-variant/30">

@@ -8,22 +8,43 @@ const supabase = createClient(
 );
 
 export const listProjects = tool(
-    async () => {
-        const { data, error } = await supabase
+    async ({ all = false }: { all?: boolean } = {}) => {
+        let query = supabase
             .from('projects')
-            .select('slug, title, short_description');
+            .select('slug, title, short_description, is_pinned')
+            .eq('is_visible', true);
+
+        if (!all) {
+            query = query.eq('is_pinned', true);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.error("Supabase query error:", error);
             return `Error fetching projects: ${error.message}`;
         }
 
-        return `List of my projects: ${JSON.stringify(data, null, 2)}`;
+        // Fallback: if pinned was requested but none found, return all visible projects
+        if (!all && (!data || data.length === 0)) {
+            const { data: allData, error: allError } = await supabase
+                .from('projects')
+                .select('slug, title, short_description, is_pinned')
+                .eq('is_visible', true);
+            if (!allError && allData && allData.length > 0) {
+                return `List of my projects: ${JSON.stringify(allData, null, 2)}`;
+            }
+        }
+
+        const label = all ? "all projects" : "pinned projects";
+        return `List of my ${label}: ${JSON.stringify(data, null, 2)}`;
     },
     {
         name: "list_projects",
-        description: "Fetch a high-level list of Allan's portfolio projects, including their titles, slugs, and short descriptions. Call this tool first to discover available projects before asking for specific details.",
-        schema: z.object({})
+        description: "Fetch a list of Allan's portfolio projects, including their titles, slugs, and short descriptions. By default, returns only pinned/featured projects. Set 'all' to true only if the user explicitly asks to see all projects, unpinned projects, or the full catalog.",
+        schema: z.object({
+            all: z.boolean().optional().default(false).describe("Set to true only if the user explicitly asks to see all projects, unpinned projects, or the full list of projects. Defaults to false to only return pinned projects.")
+        })
     }
 );
 
@@ -33,6 +54,7 @@ export const getProjectDetails = tool(
             .from('projects')
             .select('slug, title, date, ai_summary, tech_stack, links')
             .ilike('slug', `%${project_slug}%`)
+            .eq('is_visible', true)
             .maybeSingle();
 
         if (error) {

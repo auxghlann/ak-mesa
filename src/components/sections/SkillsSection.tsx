@@ -1,5 +1,5 @@
 import type { SkillCategory } from '@/data/resumeData';
-import Chip from '@/components/Chip';
+import Chip from '@/components/ui/Chip';
 
 export default function SkillsSection({ skills }: { skills: SkillCategory[] }) {
   return (

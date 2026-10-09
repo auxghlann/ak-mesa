@@ -1,12 +1,11 @@
 import Image from 'next/image';
-import profilePic from '@/assets/profile.jpg';
 import { supabase } from '@/lib/supabase';
 import { experiences, educations, skills, personalInfo, certifications } from '@/data/resumeData';
-import ProjectsSection from '@/components/ProjectsSection';
-import ExperienceSection from '@/components/ExperienceSection';
-import EducationSection from '@/components/EducationSection';
-import CertificationsSection from '@/components/CertificationsSection';
-import SkillsSection from '@/components/SkillsSection';
+import ProjectsSection from '@/components/sections/ProjectsSection';
+import ExperienceSection from '@/components/sections/ExperienceSection';
+import EducationSection from '@/components/sections/EducationSection';
+import CertificationsSection from '@/components/sections/CertificationsSection';
+import SkillsSection from '@/components/sections/SkillsSection';
 
 import { cacheLife, cacheTag } from 'next/cache';
 
@@ -17,8 +16,9 @@ async function getPinnedProjects() {
 
   const { data, error } = await supabase
     .from('projects')
-    .select('slug, title, date, icon, short_description, tech_stack')
+    .select('slug, title, date, icon, short_description, tech_stack, views, tags, app_icon_url')
     .eq('is_pinned', true)
+    .eq('is_visible', true)
     .order('date', { ascending: false });
 
   if (error) {
@@ -38,8 +38,10 @@ export default async function HomePage() {
         <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14">
           <div className="shrink-0">
             <Image
-              src={profilePic}
+              src="/assets/profile.jpg"
               alt={personalInfo.name}
+              width={288}
+              height={288}
               className="w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-[24px] object-cover shadow-md border-2 border-outline-variant"
               priority
             />
