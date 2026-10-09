@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { Education } from '@/data/resumeData';
-import { Timeline, TimelineItem } from '@/components/Timeline';
+import { Timeline, TimelineItem } from '@/components/ui/Timeline';
 
 export default function EducationSection({ educations }: { educations: Education[] }) {
   const [showAll, setShowAll] = useState(false);

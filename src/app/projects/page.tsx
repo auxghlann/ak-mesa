@@ -1,32 +1,22 @@
-import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import type { Metadata } from 'next';
+import { cacheLife, cacheTag } from 'next/cache';
+import ProjectsFilterableList, { type ProjectItem } from '@/components/projects/ProjectsFilterableList';
 
 export const metadata: Metadata = {
   title: 'Projects | Allan Khester Mesa',
   description: 'A collection of software engineering projects, AI applications, and case studies by Allan Khester Mesa.',
 };
 
-import { cacheLife, cacheTag } from 'next/cache';
-
-type ProjectSummary = {
-  slug: string;
-  title: string;
-  date: string;
-  icon: string;
-  short_description: string;
-  tech_stack: string[];
-  is_pinned?: boolean;
-};
-
-async function getProjects() {
+async function getProjects(): Promise<ProjectItem[]> {
   'use cache';
   cacheLife('hours');
   cacheTag('projects');
 
   const { data, error } = await supabase
     .from('projects')
-    .select('slug, title, date, icon, short_description, tech_stack, is_pinned')
+    .select('slug, title, date, icon, short_description, tech_stack, is_pinned, views, tags, app_icon_url')
+    .eq('is_visible', true)
     .order('is_pinned', { ascending: false })
     .order('date', { ascending: false });
 
@@ -34,7 +24,7 @@ async function getProjects() {
     console.error('Error fetching projects:', error.message);
     return [];
   }
-  return (data as ProjectSummary[]) || [];
+  return (data as ProjectItem[]) || [];
 }
 
 export default async function ProjectsPage() {
@@ -51,37 +41,7 @@ export default async function ProjectsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-        {projects.map((project) => (
-          <Link key={project.slug} href={`/projects/${project.slug}`} className="block h-full group">
-            <div className="bg-surface-container-lowest border border-outline-variant rounded-[32px] p-8 hover:border-outline hover:shadow-lg transition-all duration-300 h-full flex flex-col">
-              <div className="flex justify-between items-start mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-on-primary group-hover:scale-110 transition-transform shadow-md">
-                  <span className="material-symbols-rounded text-[28px]">
-                    {project.icon || 'dashboard'}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">
-                    {new Date(project.date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
-                  </span>
-                </div>
-              </div>
-
-              <h2 className="font-headline-md text-headline-md mb-4 text-[24px] leading-tight text-on-surface">{project.title}</h2>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-8 flex-grow line-clamp-3">{project.short_description}</p>
-
-              <div className="flex flex-wrap gap-2 mt-auto">
-                {project.tech_stack?.map((tech: string) => (
-                  <span key={tech} className="bg-surface-container border border-outline-variant/60 px-3 py-1 rounded-lg font-mono text-xs text-on-surface">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <ProjectsFilterableList projects={projects} />
     </div>
   );
 }

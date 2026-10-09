@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useAdminHotkey } from '../hooks/useAdminHotkey';
+import { useAdminHotkey } from '@/hooks/useAdminHotkey';
 import { personalInfo } from '@/data/resumeData';
 import { useTheme } from '@/context/ThemeContext';
 

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import '../index.css';
 import { Suspense } from 'react';
-import Sidebar from '@/components/Sidebar';
-import Chatbot from '@/components/Chatbot';
+import Sidebar from '@/components/layout/Sidebar';
+import Chatbot from '@/components/chat/Chatbot';
 import { personalInfo } from '@/data/resumeData';
 import { ThemeProvider } from '@/context/ThemeContext';
 

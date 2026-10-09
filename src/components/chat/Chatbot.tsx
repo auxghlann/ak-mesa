@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import quokkaImg from '../assets/quokka.jpg';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -106,7 +105,7 @@ const Chatbot: React.FC = () => {
         {/* Header */}
         <div className="bg-surface text-on-surface border-b border-outline-variant p-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Image src={quokkaImg} alt="Quokka AI" width={32} height={32} className="w-8 h-8 rounded-full object-cover border border-outline-variant" />
+            <Image src="/assets/quokka.jpg" alt="Quokka AI" width={32} height={32} className="w-8 h-8 rounded-full object-cover border border-outline-variant" />
             <span className="font-label-lg font-bold text-on-surface">Quokka</span>
           </div>
           <div className="flex items-center gap-1">

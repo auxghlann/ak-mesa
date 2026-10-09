@@ -1,5 +1,5 @@
 import type { Experience } from '@/data/resumeData';
-import { Timeline, TimelineItem } from '@/components/Timeline';
+import { Timeline, TimelineItem } from '@/components/ui/Timeline';
 
 export default function ExperienceSection({ experiences }: { experiences: Experience[] }) {
   return (

@@ -6,6 +6,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { cacheLife, cacheTag } from 'next/cache';
+import ViewCounter from '@/components/projects/ViewCounter';
+import ProjectIcon from '@/components/projects/ProjectIcon';
 
 type Project = {
   id: string;
@@ -16,6 +18,9 @@ type Project = {
   short_description: string;
   content: string;
   tech_stack: string[];
+  views?: number;
+  tags?: string[];
+  app_icon_url?: string | null;
   links: {
     livePreview?: string | null;
     github?: string | null;
@@ -34,6 +39,7 @@ async function getProject(slug: string): Promise<Project | null> {
     .from('projects')
     .select('*')
     .eq('slug', slug)
+    .eq('is_visible', true)
     .maybeSingle();
 
   if (error || !data) return null;
@@ -43,7 +49,8 @@ async function getProject(slug: string): Promise<Project | null> {
 export async function generateStaticParams() {
   const { data: projects } = await supabase
     .from('projects')
-    .select('slug');
+    .select('slug')
+    .eq('is_visible', true);
 
   if (!projects) return [];
   return projects.map((p) => ({ slug: p.slug }));
@@ -102,16 +109,39 @@ export default async function ProjectDetailPage({
       </Link>
 
       <div className="mb-12">
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-start gap-5 mb-6">
+          <ProjectIcon
+            appIconUrl={project.app_icon_url}
+            icon={project.icon}
+            title={title}
+            className="w-16 h-16 rounded-2xl bg-surface-container-high border border-outline-variant/60 flex items-center justify-center text-on-surface shadow-xs shrink-0"
+            iconClassName="text-[32px]"
+          />
           <div>
-            <h1 className="font-headline-xl text-headline-xl text-on-surface leading-tight">
+            <h1 className="font-headline-xl text-headline-xl text-on-surface leading-tight mb-2">
               {title}
             </h1>
-            <span className="font-label-md text-on-surface-variant font-medium">
-              {new Date(date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="font-label-md text-on-surface-variant font-medium">
+                {new Date(date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
+              </span>
+              <ViewCounter slug={slug} initialViews={project.views || 0} />
+            </div>
           </div>
         </div>
+
+        {Array.isArray(project.tags) && project.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full font-mono text-xs font-medium"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
           {short_description}
