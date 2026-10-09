@@ -86,11 +86,11 @@ export const educations: Education[] = [
 export const skills: SkillCategory[] = [
   {
     category: "Programming Languages and Frameworks",
-    skills: ["Python", "TypeScript", "PostgreSQL", "Java", "FastAPI", "React", "SpringBoot"]
+    skills: ["Python", "TypeScript", "Java", "FastAPI", "React", "SpringBoot"]
   },
   {
     category: "Developer Tools",
-    skills: ["Docker", "Git", "Linux", "Antigravity", "Codex"]
+    skills: ["Docker", "Git", "Github", "Linux", "Antigravity", "Codex"]
   },
   {
     category: "AI & Machine Learning",
@@ -98,11 +98,11 @@ export const skills: SkillCategory[] = [
   },
   {
     category: "Data Engineering",
-    skills: ["Airflow", "Databricks", "Polars", "Panderas", "PySpark", "Power BI"]
+    skills: ["SQL", "Airflow", "dbt", "Databricks", "Polars", "PySpark", "Power BI"]
   },
   {
     category: "Cloud & DB Platforms",
-    skills: ["AWS (EC2, S3, RDS, Lambda)", "Firebase", "Vercel", "DigitalOcean", "PostgreSQL", "Neon", "Supabase"]
+    skills: ["AWS (EC2, S3, RDS, Lambda)", "Vercel", "DigitalOcean", "Firebase", "PostgreSQL", "Neon", "Supabase", "DuckDB"]
   }
 ];
 
