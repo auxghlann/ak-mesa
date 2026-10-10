@@ -260,14 +260,6 @@ export default function ProjectsFilterableList({
                   />
 
                   <div className="flex items-center gap-2.5">
-                    {project.is_pinned && (
-                      <span
-                        className="w-7 h-7 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shrink-0"
-                        title="Featured project"
-                      >
-                        <span className="material-symbols-rounded text-[15px]">push_pin</span>
-                      </span>
-                    )}
                     <span className="font-mono text-xs text-on-surface-variant">
                       {new Date(project.date).toLocaleDateString('en-US', {
                         timeZone: 'UTC',
@@ -276,8 +268,16 @@ export default function ProjectsFilterableList({
                         year: 'numeric',
                       })}
                     </span>
+                    {project.is_pinned && (
+                      <span className="material-symbols-rounded text-[15px] rotate-45 text-primary" title="Featured project">push_pin</span>
+                    )}
                   </div>
                 </div>
+
+
+                <h2 className="font-headline-md text-headline-md mb-2 text-[22px] leading-snug text-on-surface group-hover:text-primary transition-colors">
+                  {project.title}
+                </h2>
 
                 {/* Zone 2: Content Body (Category Tags, Title, Description) */}
                 {Array.isArray(project.tags) && project.tags.length > 0 && (
@@ -285,7 +285,7 @@ export default function ProjectsFilterableList({
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-semibold tracking-wide uppercase"
+                        className="bg-surface-container border border-outline-variant/60 px-2.5 py-1 rounded-lg font-mono text-[11px] text-on-surface-variant"
                       >
                         {tag}
                       </span>
@@ -293,13 +293,10 @@ export default function ProjectsFilterableList({
                   </div>
                 )}
 
-                <h2 className="font-headline-md text-headline-md mb-2 text-[22px] leading-snug text-on-surface group-hover:text-primary transition-colors">
-                  {project.title}
-                </h2>
-
-                <p className="font-body-md text-body-md text-on-surface-variant mb-6 flex-grow line-clamp-3">
+                <p className="font-body-md text-body-md text-on-surface-variant mb-6 mt-3 flex-grow line-clamp-3">
                   {project.short_description}
                 </p>
+
 
                 {/* Zone 3: Footer Bar (Tech Stack on Left + Views & Arrow on Right) */}
                 <div className="flex items-center justify-between gap-3 mt-auto pt-4 border-t border-outline-variant/40">

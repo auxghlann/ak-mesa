@@ -109,7 +109,7 @@ export default async function ProjectDetailPage({
       </Link>
 
       <div className="mb-12">
-        <div className="flex items-start gap-5 mb-6">
+        <div className="flex items-start gap-5 mb-5">
           <ProjectIcon
             appIconUrl={project.app_icon_url}
             icon={project.icon}
@@ -118,11 +118,28 @@ export default async function ProjectDetailPage({
             iconClassName="text-[32px]"
           />
           <div>
-            <h1 className="font-headline-xl text-headline-xl text-on-surface leading-tight mb-2">
+            <h1 className="font-headline-xl text-headline-lg text-on-surface leading-tight mb-2">
               {title}
             </h1>
             <div className="flex flex-wrap items-center gap-3">
-              <span className="font-label-md text-on-surface-variant font-medium">
+              {Array.isArray(project.tags) && project.tags.length > 0 && (
+                <>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="bg-surface-container border border-outline-variant/60 px-2.5 py-0.5 rounded-lg font-mono text-xs text-on-surface-variant"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <span className="text-outline-variant/80 select-none font-mono text-xs" aria-hidden="true">
+                    |
+                  </span>
+                </>
+              )}
+              <span className="font-label-md text-on-surface-variant font-mono text-xs">
                 {new Date(date).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' })}
               </span>
               <ViewCounter slug={slug} initialViews={project.views || 0} />
@@ -130,33 +147,20 @@ export default async function ProjectDetailPage({
           </div>
         </div>
 
-        {Array.isArray(project.tags) && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-6">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full font-mono text-xs font-medium"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
         <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
           {short_description}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-8">
           {tech_stack?.map((tech: string) => (
-            <span key={tech} className="bg-surface-container px-3 py-1 rounded-lg font-label-sm text-label-sm text-on-surface">
+            <span key={tech} className="bg-surface-container border border-outline-variant/60 px-3 py-1 rounded-lg font-mono text-xs text-on-surface-variant">
               {tech}
             </span>
           ))}
         </div>
 
         {links && (
-          <div className="flex flex-wrap gap-4 border-b border-outline-variant/30 pb-8">
+          <div className="flex flex-wrap gap-4 border-b border-outline-variant/30 pb-5">
             {links.livePreview && (
               <a
                 href={links.livePreview}
@@ -221,7 +225,7 @@ export default async function ProjectDetailPage({
         </div>
       )}
 
-      <div className="prose prose-lg dark:prose-invert max-w-none text-on-surface-variant prose-headings:font-headline-md prose-headings:text-on-surface prose-a:text-on-surface prose-a:underline hover:prose-a:opacity-80 prose-code:font-mono prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none prose-pre:bg-surface-container prose-pre:border prose-pre:border-outline-variant">
+      <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-headline-md prose-headings:text-on-surface prose-p:text-on-surface-variant prose-strong:text-on-surface prose-strong:font-semibold prose-blockquote:text-on-surface prose-blockquote:border-l-outline prose-blockquote:bg-surface-container-low prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-li:text-on-surface-variant prose-a:text-on-surface prose-a:underline hover:prose-a:opacity-80 prose-code:font-mono prose-code:text-on-surface prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none prose-pre:bg-surface-container prose-pre:border prose-pre:border-outline-variant">
         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
           {content}
         </ReactMarkdown>
