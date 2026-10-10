@@ -47,11 +47,11 @@ export default function ViewCounter({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container border border-outline-variant/60 font-mono text-xs text-on-surface-variant ${className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 font-mono text-xs text-on-surface-variant ${className}`}
       title={`${views} views`}
     >
-      <span className="material-symbols-rounded text-[15px]">visibility</span>
-      <span>{views} {views === 1 ? 'view' : 'views'}</span>
+      <span className="material-symbols-rounded">visibility</span>
+      <span className="font-mono text-xs">{views}</span>
     </span>
   );
 }

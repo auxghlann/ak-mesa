@@ -148,7 +148,7 @@ export default function MarkdownEditor({
           className="w-full bg-surface border border-outline-variant rounded-b-[16px] p-4 font-mono text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors resize-y min-h-[300px]"
         />
       ) : (
-        <div className="w-full bg-surface border border-outline-variant rounded-b-[16px] p-6 min-h-[300px] max-h-[600px] overflow-y-auto prose prose-lg dark:prose-invert max-w-none text-on-surface-variant prose-headings:font-headline-md prose-headings:text-on-surface prose-a:text-on-surface">
+        <div className="w-full bg-surface border border-outline-variant rounded-b-[16px] p-6 min-h-[300px] max-h-[600px] overflow-y-auto prose prose-lg dark:prose-invert max-w-none prose-headings:font-headline-md prose-headings:text-on-surface prose-p:text-on-surface-variant prose-strong:text-on-surface prose-strong:font-semibold prose-blockquote:text-on-surface prose-blockquote:border-l-outline prose-blockquote:bg-surface-container-low prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-a:text-on-surface">
           {value.trim() ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
               {value}

@@ -36,11 +36,11 @@ export default function Sidebar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pathname]);
 
-  const [isHomeExpanded, setIsHomeExpanded] = useState<boolean>(true);
+  const [isHomeExpanded, setIsHomeExpanded] = useState<boolean>(false);
 
   const primaryLinks = [
     { name: '~', path: '/', icon: 'home' },
-    { name: 'Projects', path: '/projects', icon: 'folder' },
+    { name: 'projects', path: '/projects', icon: 'folder' },
   ];
 
   const homeSections = [
@@ -67,12 +67,18 @@ export default function Sidebar() {
           <nav className="flex flex-col w-full font-mono text-xs select-none">
             {/* Root Node: ~ (Home directory) */}
             <div className="flex flex-col">
-              <div className="flex items-center gap-1.5 py-1 px-1 rounded-lg hover:bg-surface-container-highest transition-colors group">
+              <div
+                className={`flex items-center gap-1.5 py-1 px-1 mb-1 rounded-lg transition-colors group ${
+                  pathname === '/' && activeSection === 'home'
+                    ? 'bg-surface-container'
+                    : 'hover:bg-surface-container'
+                }`}
+              >
                 {/* Chevron Toggle */}
                 <button
                   type="button"
                   onClick={() => setIsHomeExpanded(!isHomeExpanded)}
-                  className="w-4 h-4 flex items-center justify-center text-on-surface-variant hover:text-on-surface cursor-pointer shrink-0"
+                  className="w-4 h-4 flex items-center justify-center text-on-surface-variant hover:text-on-surface-variant cursor-pointer shrink-0"
                   aria-label={isHomeExpanded ? 'Collapse home tree' : 'Expand home tree'}
                 >
                   <span
@@ -90,16 +96,14 @@ export default function Sidebar() {
                     if (pathname === '/') {
                       e.preventDefault();
                       window.scrollTo({ top: 0, behavior: 'smooth' });
+                      setActiveSection('home');
                     }
-                    if (!isHomeExpanded) setIsHomeExpanded(true);
+                    setIsHomeExpanded((prev) => !prev);
                   }}
-                  className={`flex items-center gap-2 flex-grow transition-colors ${pathname === '/' && activeSection === 'home'
-                    ? 'text-on-surface font-semibold'
-                    : 'text-on-surface-variant hover:text-on-surface'
-                    }`}
+                  className="flex items-center gap-2 flex-grow transition-colors text-on-surface-variant"
                 >
-                  <span className="material-symbols-rounded text-[19px] shrink-0 text-on-surface">home</span>
-                  <span className="text-sm">~</span>
+                  <span className="material-symbols-rounded text-[19px] shrink-0 text-on-surface-variant">home</span>
+                  <span className="text-sm text-on-surface-variant">~</span>
                 </Link>
               </div>
 
@@ -116,17 +120,18 @@ export default function Sidebar() {
                           if (pathname === '/') {
                             e.preventDefault();
                             document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' });
+                            setActiveSection(section.id);
                           }
                         }}
-                        className={`flex items-center gap-2 py-1 px-1.5 rounded-lg transition-colors text-xs ${isSectionActive
-                          ? 'text-on-surface font-semibold bg-surface-container-highest'
-                          : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
+                        className={`flex items-center gap-2 py-1 px-1.5 rounded-lg transition-colors text-xs text-on-surface-variant ${isSectionActive
+                          ? 'bg-surface-container'
+                          : 'hover:bg-surface-container'
                           }`}
                       >
-                        <span className={`material-symbols-rounded text-[17px] shrink-0 ${isSectionActive ? 'text-on-surface' : 'text-on-surface-variant'}`}>
+                        <span className="material-symbols-rounded text-[17px] shrink-0 text-on-surface-variant">
                           {section.icon}
                         </span>
-                        <span>{section.name}</span>
+                        <span className="text-on-surface-variant">{section.name}</span>
                       </Link>
                     );
                   })}
@@ -138,15 +143,15 @@ export default function Sidebar() {
             <div>
               <Link
                 href="/projects"
-                className={`flex items-center gap-2 py-1 px-1 rounded-lg transition-colors group ${pathname.startsWith('/projects')
-                  ? 'text-on-surface font-semibold bg-surface-container-highest'
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
+                className={`flex items-center gap-2 py-1 px-1 rounded-lg transition-colors text-on-surface-variant group ${pathname.startsWith('/projects')
+                  ? 'bg-surface-container'
+                  : 'hover:bg-surface-container'
                   }`}
               >
                 {/* Spacer to align folder icon with home icon */}
                 <span className="w-4 shrink-0" aria-hidden="true" />
-                <span className="material-symbols-rounded text-[19px] shrink-0">folder</span>
-                <span className="text-sm">Projects</span>
+                <span className="material-symbols-rounded text-[19px] shrink-0 text-on-surface-variant">folder</span>
+                <span className="text-sm text-on-surface-variant">projects</span>
               </Link>
             </div>
           </nav>
@@ -167,8 +172,8 @@ export default function Sidebar() {
                 aria-label="Light mode"
                 suppressHydrationWarning
                 className={`flex items-center justify-center py-1 rounded-lg transition-all cursor-pointer ${mounted && theme === 'light'
-                  ? 'bg-surface text-on-surface shadow-xs font-semibold'
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
+                  ? 'bg-surface text-on-surface shadow-xs font-medium'
+                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
                   }`}
               >
                 <span className="material-symbols-rounded text-[17px]">light_mode</span>
@@ -180,8 +185,8 @@ export default function Sidebar() {
                 aria-label="Dark mode"
                 suppressHydrationWarning
                 className={`flex items-center justify-center py-1 rounded-lg transition-all cursor-pointer ${mounted && theme === 'dark'
-                  ? 'bg-surface text-on-surface shadow-xs font-semibold'
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
+                  ? 'bg-surface text-on-surface shadow-xs font-medium'
+                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
                   }`}
               >
                 <span className="material-symbols-rounded text-[17px]">dark_mode</span>
@@ -193,8 +198,8 @@ export default function Sidebar() {
                 aria-label="System theme"
                 suppressHydrationWarning
                 className={`flex items-center justify-center py-1 rounded-lg transition-all cursor-pointer ${mounted && theme === 'system'
-                  ? 'bg-surface text-on-surface shadow-xs font-semibold'
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
+                  ? 'bg-surface text-on-surface shadow-xs font-medium'
+                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
                   }`}
               >
                 <span className="material-symbols-rounded text-[17px]">desktop_windows</span>
@@ -208,7 +213,7 @@ export default function Sidebar() {
             </p>
             <a
               href={`mailto:${personalInfo.email}`}
-              className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors group"
+              className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors group"
               title={personalInfo.email}
             >
               <span className="material-symbols-rounded text-on-surface-variant group-hover:text-primary text-[18px] shrink-0 group-hover:scale-110 transition-transform">
@@ -231,16 +236,15 @@ export default function Sidebar() {
               <Link
                 key={link.name}
                 href={link.path}
-                className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all duration-200 min-w-[64px] ${isActive ? 'text-on-surface font-bold' : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
+                className="flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all duration-200 min-w-[64px] text-on-surface-variant"
               >
                 <div
-                  className={`flex items-center justify-center w-10 h-6 rounded-full mb-0.5 transition-colors ${isActive ? 'bg-surface-container text-on-surface' : 'bg-transparent'
+                  className={`flex items-center justify-center w-10 h-6 rounded-full mb-0.5 transition-colors ${isActive ? 'bg-surface-container' : 'bg-transparent'
                     }`}
                 >
-                  <span className="material-symbols-rounded text-[20px]">{link.icon}</span>
+                  <span className="material-symbols-rounded text-[20px] text-on-surface-variant">{link.icon}</span>
                 </div>
-                <span className="font-mono text-[11px] font-medium">{link.name}</span>
+                <span className="font-mono text-[11px] font-medium text-on-surface-variant">{link.name}</span>
               </Link>
             );
           })}
