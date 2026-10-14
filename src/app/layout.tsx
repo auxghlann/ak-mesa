@@ -6,6 +6,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import Chatbot from '@/components/chat/Chatbot';
 import { personalInfo } from '@/data/resumeData';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -57,6 +58,7 @@ export default function RootLayout({
           </div>
           <Chatbot />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
