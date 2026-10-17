@@ -16,6 +16,7 @@ interface ProjectFormData {
   app_icon_url: string;
   tags: string;
   short_description: string;
+  ai_summary: string;
   tech_stack: string;
   livePreview: string;
   github: string;
@@ -38,6 +39,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
     app_icon_url: '',
     tags: '',
     short_description: '',
+    ai_summary: '',
     tech_stack: '',
     livePreview: '',
     github: '',
@@ -74,6 +76,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
             app_icon_url: data.app_icon_url || '',
             tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
             short_description: data.short_description || '',
+            ai_summary: data.ai_summary || '',
             tech_stack: Array.isArray(data.tech_stack) ? data.tech_stack.join(', ') : '',
             livePreview: data.links?.livePreview || '',
             github: data.links?.github || '',
@@ -175,6 +178,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
         app_icon_url: formData.app_icon_url.trim() || null,
         tags: tagsArray,
         short_description: formData.short_description.trim(),
+        ai_summary: formData.ai_summary.trim() || null,
         tech_stack: techStackArray,
         links: linksObj,
         content: formData.content,
@@ -281,7 +285,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
 
             <div>
               <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-                App Icon (Image Upload - Optional)
+                App Icon
               </label>
               <div className="flex items-center gap-3">
                 <label className="bg-surface-container border border-outline-variant hover:border-outline rounded-xl px-4 py-2.5 text-xs font-mono text-on-surface cursor-pointer transition-colors inline-flex items-center gap-2">
@@ -359,10 +363,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
                 />
                 <label htmlFor="is_visible" className="cursor-pointer select-none">
                   <span className="block font-mono text-xs font-semibold text-on-surface">
-                    Publicly Visible
-                  </span>
-                  <span className="block text-[11px] text-on-surface-variant font-sans">
-                    Show this project on your portfolio and public catalog. Uncheck to hide.
+                    Public
                   </span>
                 </label>
               </div>
@@ -378,10 +379,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
                 />
                 <label htmlFor="is_pinned" className="cursor-pointer select-none">
                   <span className="block font-mono text-xs font-semibold text-on-surface">
-                    Pin Project (Featured Highlight)
-                  </span>
-                  <span className="block text-[11px] text-on-surface-variant font-sans">
-                    Display this project on Home highlights and prioritize at the top of the list.
+                    Pin Project
                   </span>
                 </label>
               </div>
@@ -390,7 +388,7 @@ export default function AdminProjectForm({ id }: { id?: string }) {
 
           <div>
             <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
-              Short Description (Summary Card) *
+              Short Description *
             </label>
             <textarea
               required
@@ -401,6 +399,23 @@ export default function AdminProjectForm({ id }: { id?: string }) {
               placeholder="Brief summary explaining what problem this project solves..."
               className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors resize-y"
             />
+          </div>
+
+          <div>
+            <label className="block font-label-md text-label-md text-on-surface mb-2 font-medium">
+              AI Summary (Assistant Retrieval Context)
+            </label>
+            <textarea
+              rows={3}
+              name="ai_summary"
+              value={formData.ai_summary}
+              onChange={handleChange}
+              placeholder="Detailed technical summary used by the portfolio AI chatbot for natural language retrieval..."
+              className="w-full bg-surface border border-outline-variant rounded-xl p-3 text-on-surface font-body-md focus:outline-none focus:border-primary transition-colors resize-y"
+            />
+            <span className="text-[11px] text-on-surface-variant font-sans mt-1 block">
+              Indexed by the portfolio AI assistant tool to answer questions about this project.
+            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

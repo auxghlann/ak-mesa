@@ -32,7 +32,6 @@ context/*
 .env*
 .gemini
 
-tests/
 # db
 scripts/
 *.sql
