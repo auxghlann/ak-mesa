@@ -34,7 +34,6 @@ context/*
 
 # db
 scripts/
-!scripts/syncShowcase.ts
 *.sql
 
 # Workflow docs and agent rules

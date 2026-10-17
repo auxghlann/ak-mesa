@@ -119,37 +119,5 @@ Duplicate reference should be ignored:
       { src: 'https://example.com/dashboard.png', alt: 'Dashboard View' },
     ]);
   });
-
-  it('should parse project-showcase markdown frontmatter and body into ak-mesa schema', async () => {
-    const { parseShowcaseMarkdown } = await import('../scripts/syncShowcase');
-    const fixture = `---
-slug: test-project
-title: Test Project
-date: 2026-10-12
-icon: terminal
-short_description: Concise overview of test project
-tags:
-  - AI & Agents
-  - Web Apps
-tech_stack:
-  - FastAPI
-  - TypeScript
-links:
-  github: https://github.com/example/test
-  livePreview: null
-ai_summary: Test summary for AI retrieval
----
-
-Content body here without H1 header.`;
-
-    const parsed = parseShowcaseMarkdown(fixture);
-    expect(parsed.slug).toBe('test-project');
-    expect(parsed.tags).toEqual(['AI & Agents', 'Web Apps']);
-    expect(parsed.tech_stack).toContain('FastAPI');
-    expect(parsed.links.github).toBe('https://github.com/example/test');
-    expect(parsed.links.livePreview).toBeNull();
-    expect(parsed.ai_summary).toBe('Test summary for AI retrieval');
-    expect(parsed.content).toBe('Content body here without H1 header.');
-  });
 });
 
