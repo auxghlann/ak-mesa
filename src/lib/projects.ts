@@ -14,6 +14,7 @@ export type AdminProject = {
   tags?: string[];
   app_icon_url?: string | null;
   is_visible?: boolean;
+  ai_summary?: string | null;
 };
 
 /**

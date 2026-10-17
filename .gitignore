@@ -32,9 +32,9 @@ context/*
 .env*
 .gemini
 
-tests/
 # db
 scripts/
+!scripts/syncShowcase.ts
 *.sql
 
 # Workflow docs and agent rules

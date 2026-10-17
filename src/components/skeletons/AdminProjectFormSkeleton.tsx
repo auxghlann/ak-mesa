@@ -46,6 +46,12 @@ export default function AdminProjectFormSkeleton() {
           <Skeleton className="w-full h-24 rounded-xl" />
         </div>
 
+        {/* AI Summary */}
+        <div>
+          <Skeleton className="w-52 h-5 mb-2" />
+          <Skeleton className="w-full h-28 rounded-xl" />
+        </div>
+
         {/* Tech Stack */}
         <div>
           <Skeleton className="w-48 h-5 mb-2" />

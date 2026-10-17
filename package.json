@@ -8,7 +8,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "oxlint"
+    "lint": "oxlint",
+    "test": "vitest run",
+    "sync:showcase": "tsx scripts/syncShowcase.ts"
   },
   "dependencies": {
     "@langchain/core": "^1.2.2",

@@ -2,12 +2,10 @@ import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 import { cacheLife, cacheTag } from 'next/cache';
 import ViewCounter from '@/components/projects/ViewCounter';
 import ProjectIcon from '@/components/projects/ProjectIcon';
+import ProjectContentViewer from '@/components/projects/ProjectContentViewer';
 
 type Project = {
   id: string;
@@ -209,27 +207,11 @@ export default async function ProjectDetailPage({
         )}
       </div>
 
-      {images.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-          {images.map((url: string, idx: number) => {
-            const isLastOdd = idx === images.length - 1 && images.length % 2 !== 0;
-            return (
-              <img
-                key={url}
-                src={url}
-                alt={`${title} screenshot ${idx + 1}`}
-                className={`w-full h-auto rounded-[24px] shadow-sm border border-outline-variant/30 ${isLastOdd ? 'md:col-span-2' : ''}`}
-              />
-            );
-          })}
-        </div>
-      )}
-
-      <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-headline-md prose-headings:text-on-surface prose-p:text-on-surface-variant prose-strong:text-on-surface prose-strong:font-semibold prose-blockquote:text-on-surface prose-blockquote:border-l-outline prose-blockquote:bg-surface-container-low prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-li:text-on-surface-variant prose-a:text-on-surface prose-a:underline hover:prose-a:opacity-80 prose-code:font-mono prose-code:text-on-surface prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none prose-pre:bg-surface-container prose-pre:border prose-pre:border-outline-variant">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-          {content}
-        </ReactMarkdown>
-      </div>
+      <ProjectContentViewer
+        title={title}
+        images={images}
+        content={content}
+      />
     </div>
   );
 }

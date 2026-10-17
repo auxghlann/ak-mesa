@@ -164,20 +164,21 @@ export default function AdminProjectsPage() {
                         <span className="material-symbols-rounded text-[13px]">visibility</span>
                         {project.views ?? 0}
                       </span>
-                      {project.is_visible === false ? (
-                        <span className="inline-flex items-center gap-1 font-mono text-[11px] text-on-error-container bg-error-container/60 px-2 py-0.5 rounded-full border border-error/20">
+                      {project.is_visible === false && (
+                        <span
+                          title="Hidden from public portfolio"
+                          className="inline-flex items-center gap-1 font-mono text-[11px] text-on-error-container bg-error-container/60 px-2 py-0.5 rounded-full border border-error/20"
+                        >
                           <span className="material-symbols-rounded text-[13px]">visibility_off</span>
                           Hidden
                         </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 font-mono text-[11px] text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">
-                          <span className="material-symbols-rounded text-[13px]">visibility</span>
-                          Visible
-                        </span>
                       )}
                       {project.is_pinned && (
-                        <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary text-on-primary font-bold shadow-xs">
-                          <span className="material-symbols-rounded text-[13px]">push_pin</span>
+                        <span
+                          title="Pinned highlight"
+                          className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary text-on-primary font-bold shadow-xs"
+                        >
+                          <span className="material-symbols-rounded rotate-45 text-[13px]">push_pin</span>
                           Pinned
                         </span>
                       )}
