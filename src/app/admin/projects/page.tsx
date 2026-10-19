@@ -170,7 +170,6 @@ export default function AdminProjectsPage() {
                           className="inline-flex items-center gap-1 font-mono text-[11px] text-on-error-container bg-error-container/60 px-2 py-0.5 rounded-full border border-error/20"
                         >
                           <span className="material-symbols-rounded text-[13px]">visibility_off</span>
-                          Hidden
                         </span>
                       )}
                       {project.is_pinned && (
@@ -179,7 +178,6 @@ export default function AdminProjectsPage() {
                           className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary text-on-primary font-bold shadow-xs"
                         >
                           <span className="material-symbols-rounded rotate-45 text-[13px]">push_pin</span>
-                          Pinned
                         </span>
                       )}
                     </div>
