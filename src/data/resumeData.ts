@@ -86,11 +86,11 @@ export const educations: Education[] = [
 export const skills: SkillCategory[] = [
   {
     category: "Programming Languages and Frameworks",
-    skills: ["Python", "TypeScript", "Java", "FastAPI", "React", "SpringBoot"]
+    skills: ["Python", "TypeScript", "Java", "FastAPI", "React & NextJs",]
   },
   {
     category: "Developer Tools",
-    skills: ["Docker", "Git", "Github", "Linux", "Antigravity", "Codex"]
+    skills: ["Docker", "Git", "Github", "Linux (WSL)", "Antigravity", "Codex"]
   },
   {
     category: "AI & Machine Learning",
@@ -107,6 +107,14 @@ export const skills: SkillCategory[] = [
 ];
 
 export const certifications: Certification[] = [
+  {
+    id: "cert-dbt-fundamentals",
+    name: "dbt Fundamentals",
+    issuer: "DataCamp",
+    date: "2026",
+    link: "https://www.datacamp.com/statement-of-accomplishment/track/81798b755dcd137ed62bea27174d65e17e476639",
+    pinned: true
+  },
   {
     id: "cert-data-eng-sql",
     name: "Associate Data Engineer in SQL",
