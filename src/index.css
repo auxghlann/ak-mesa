@@ -427,3 +427,69 @@
   color: #d4d4d4;
   border-color: #262626;
 }
+
+/* Section Dropdown Disclosure Animations */
+.collapsible-disclosure {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms ease-out;
+}
+
+.collapsible-disclosure[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.collapsible-disclosure > .collapsible-disclosure-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cert-grid-wrapper {
+  transition: height 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cert-extra-item {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 280ms ease-out,
+    translate 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@starting-style {
+  .cert-extra-item {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+.cert-extra-item[data-closing="true"] {
+  opacity: 0;
+  translate: 0 -8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsible-disclosure,
+  .cert-grid-wrapper {
+    transition: none !important;
+  }
+
+  .cert-extra-item {
+    translate: none;
+    transition-duration: 0.1s;
+  }
+
+  @starting-style {
+    .cert-extra-item {
+      translate: none;
+    }
+  }
+
+  .cert-extra-item[data-closing="true"] {
+    translate: none;
+  }
+}
