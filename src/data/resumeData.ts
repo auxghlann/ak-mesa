@@ -98,11 +98,11 @@ export const skills: SkillCategory[] = [
   },
   {
     category: "Data Engineering",
-    skills: ["SQL", "Airflow", "dbt", "Databricks", "Polars", "PySpark", "Power BI"]
+    skills: ["SQL", "SSIS", "dbt", "Airflow","Databricks", "Polars", "PySpark", "Power BI"]
   },
   {
     category: "Cloud & DB Platforms",
-    skills: ["AWS (EC2, S3, RDS, Lambda)", "Vercel", "DigitalOcean", "Firebase", "PostgreSQL", "Neon", "Supabase", "DuckDB"]
+    skills: ["AWS (EC2, S3)", "Vercel", "DigitalOcean", "Firebase", "PostgreSQL", "MSSQL", "Supabase", "DuckDB"]
   }
 ];
 
@@ -215,11 +215,12 @@ export const certifications: Certification[] = [
 
 export const personalInfo = {
   name: "Khester Mesa",
-  career_level: "Fresh Graduate. Looking for Entry Level jobs",
-  headline: "Aspiring Data & AI Engineer",
+  career_level: "0-1 Years Experience Level, Entry-level",
+  headline: "Data Engineering Specialist",
   email: "khestermesa@gmail.com",
   phone: "09754486106",
   linkedin: "linkedin.com/in/ak-mesa",
   github: "github.com/auxghlann",
   website: "ak-mesa.vercel.app",
+  summary: "A recent Cum Laude Computer Science graduate and a passionate developer who aims to build software or data solutions that actually help people."
 };

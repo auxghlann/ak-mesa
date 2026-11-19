@@ -54,14 +54,14 @@ export default async function HomePage() {
               {personalInfo.headline}
             </h2>
             <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-2xl mx-auto md:mx-0">
-              A recent Cum Laude Computer Science graduate and a passionate developer who aims to build AI-powered applications that actually help people.
+              {personalInfo.summary}
             </p>
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-sm text-on-surface-variant font-sans">
               <a
                 href={`mailto:${personalInfo.email}`}
                 className="inline-flex items-center gap-1.5 hover:text-primary transition-colors group"
               >
-                <span className="material-symbols-rounded text-on-surface-variant group-hover:text-primary text-[18px] group-hover:scale-110 transition-transform">mail</span>
+                <span aria-hidden="true" className="material-symbols-rounded text-on-surface-variant group-hover:text-primary text-[18px] group-hover:scale-110 transition-transform">mail</span>
                 <span>{personalInfo.email}</span>
               </a>
 
